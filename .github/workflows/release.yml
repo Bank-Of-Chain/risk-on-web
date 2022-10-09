@@ -20,11 +20,10 @@ jobs:
         uses: borales/actions-yarn@master
         with:
           cmd: build
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
-          personal_token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./build
-          user_name: jerrylib
-          user_email: js_bin@163.com
-          publish_branch: gh-pages
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: public
+          BASE_BRANCH: main
