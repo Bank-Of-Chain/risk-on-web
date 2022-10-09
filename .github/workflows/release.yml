@@ -1,0 +1,30 @@
+name: Release
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  deploy-web:
+    name: Deploy Web Site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+          token: ${{secrets.ACTIONS_DEPLOY_KEY}}
+      - name: Install
+        uses: borales/actions-yarn@master
+        with:
+          cmd: install
+      - name: Build
+        uses: borales/actions-yarn@master
+        with:
+          cmd: build
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./build
+          user_name: jerrylib
+          user_email: js_bin@163.com
+          publish_branch: gh-pages
