@@ -8,10 +8,8 @@ jobs:
     name: Deploy Web Site
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: master
-          token: ${{secrets.ACTIONS_DEPLOY_KEY}}
+      - name: Checkout 🛎️
+        uses: actions/checkout@master
       - name: Install
         uses: borales/actions-yarn@master
         with:
