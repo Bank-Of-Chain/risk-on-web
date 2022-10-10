@@ -33,11 +33,8 @@
     "@testing-library/user-event": "^13.5.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.31.9",
-    "eslint-plugin-react-hooks": "^4.6.0",
     "filemanager-webpack-plugin": "^7.0.0",
     "husky": "^8.0.1",
-    "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "react-app-rewired": "^2.2.1"
   },
