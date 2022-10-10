@@ -17,7 +17,6 @@ module.exports = function override(config) {
     "@": resolve("src"),
   };
   if (NODE_ENV === "production") {
-    config.output.publicPath = "/risk-on-web/";
     config.plugins.push(
       new FileManagerPlugin({
         events: {
