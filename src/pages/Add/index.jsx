@@ -6,14 +6,12 @@ import { Button } from "antd";
 
 const Add = () => {
   return (
-    <React.Suspense>
-      <div>
-        <p>Add</p>
-        <Button type="primary">
-          <Link to="/deposit">go to /deposit</Link>
-        </Button>
-      </div>
-    </React.Suspense>
+    <div>
+      <p>Add</p>
+      <Button type="primary">
+        <Link to="/deposit">go to /deposit</Link>
+      </Button>
+    </div>
   );
 };
 
