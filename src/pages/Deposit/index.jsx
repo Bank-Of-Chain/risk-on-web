@@ -6,15 +6,17 @@ import { Button } from "antd";
 
 const Deposit = () => {
   return (
-    <div>
-      <p>Deposit</p>
-      <Button type="primary">
-        <Link to="/">go to /home</Link>
-      </Button>
-      <Button type="primary">
-        <Link to="/analysis">go to /analysis</Link>
-      </Button>
-    </div>
+    <React.Suspense>
+      <div>
+        <p>Deposit</p>
+        <Button type="primary">
+          <Link to="/">go to /home</Link>
+        </Button>
+        <Button type="primary">
+          <Link to="/analysis">go to /analysis</Link>
+        </Button>
+      </div>
+    </React.Suspense>
   );
 };
 
