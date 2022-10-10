@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "set ASSET_PATH=risk-on-web&&react-app-rewired build --env ",
+    "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
