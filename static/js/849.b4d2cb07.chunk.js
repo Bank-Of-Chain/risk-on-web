@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkrisk_on_web=self.webpackChunkrisk_on_web||[]).push([[849],{6849:function(e,r,s){s.r(r);s(8381);var i=s(7174),n=s(4835),t=s(9343);r.default=function(){return(0,t.jsxs)("div",{children:[(0,t.jsx)("p",{children:"Add"}),(0,t.jsx)(n.Z,{type:"primary",children:(0,t.jsx)(i.rU,{to:"/deposit",children:"go to /deposit"})})]})}}}]);
+//# sourceMappingURL=849.b4d2cb07.chunk.js.map
