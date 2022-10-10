@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 // === Components === //
 import { Link } from "react-router-dom";
@@ -6,12 +6,14 @@ import { Button } from "antd";
 
 const Add = () => {
   return (
-    <div>
-      <p>Add</p>
-      <Button type="primary">
-        <Link to="/deposit">go to /deposit</Link>
-      </Button>
-    </div>
+    <React.Suspense>
+      <div>
+        <p>Add</p>
+        <Button type="primary">
+          <Link to="/deposit">go to /deposit</Link>
+        </Button>
+      </div>
+    </React.Suspense>
   );
 };
 
