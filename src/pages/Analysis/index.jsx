@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react'
 
 // === Components === //
-import { Link } from "react-router-dom";
-import { Button } from "antd";
+import { Link } from 'react-router-dom'
+import { Button } from 'antd'
 
 const Analysis = () => {
   return (
@@ -12,7 +12,7 @@ const Analysis = () => {
         <Link to="/">go to home page</Link>
       </Button>
     </div>
-  );
-};
+  )
+}
 
-export default Analysis;
+export default Analysis

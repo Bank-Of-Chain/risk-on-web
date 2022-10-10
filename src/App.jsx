@@ -1,34 +1,34 @@
-import React, { useEffect, lazy, Suspense } from "react";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import React, { useEffect, lazy, Suspense } from 'react'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 
 // === Components === //
-import Header from "@/components/Header";
+import Header from '@/components/Header'
 
 // === Hooks === //
-import useWallet from "@/hooks/useWallet";
+import useWallet from '@/hooks/useWallet'
 
 // === Utils === //
-import { isInMobileWalletApp, isInMobileH5 } from "@/helpers/plugin-util";
+import { isInMobileWalletApp, isInMobileH5 } from '@/helpers/plugin-util'
 
 // === Styles === //
-import "./App.css";
+import './App.css'
 
 // === Pages === //
-const Home = lazy(() => import("./pages/Home/index"));
-const Add = lazy(() => import("./pages/Add/index"));
-const Deposit = lazy(() => import("./pages/Deposit/index"));
-const Analysis = lazy(() => import("./pages/Analysis/index"));
+const Home = lazy(() => import('./pages/Home/index'))
+const Add = lazy(() => import('./pages/Add/index'))
+const Deposit = lazy(() => import('./pages/Deposit/index'))
+const Analysis = lazy(() => import('./pages/Analysis/index'))
 
 function App() {
-  const { web3Modal, connect, getWalletName } = useWallet();
+  const { web3Modal, connect, getWalletName } = useWallet()
 
-  const walletName = getWalletName();
+  const walletName = getWalletName()
 
   useEffect(() => {
     if (web3Modal.cachedProvider && !isInMobileWalletApp() && !isInMobileH5()) {
-      connect();
+      connect()
     }
-  }, [connect, web3Modal.cachedProvider, walletName]);
+  }, [connect, web3Modal.cachedProvider, walletName])
 
   return (
     <div className="App">
@@ -71,7 +71,7 @@ function App() {
         </Routes>
       </HashRouter>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

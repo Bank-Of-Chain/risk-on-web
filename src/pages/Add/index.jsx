@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react'
 
 // === Components === //
-import { Link } from "react-router-dom";
-import { Button } from "antd";
+import { Link } from 'react-router-dom'
+import { Button } from 'antd'
 
 const Add = () => {
   return (
@@ -12,7 +12,7 @@ const Add = () => {
         <Link to="/deposit">go to /deposit</Link>
       </Button>
     </div>
-  );
-};
+  )
+}
 
-export default Add;
+export default Add

@@ -1,16 +1,16 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit'
 
 // === Reducers === //
-import metaReducer from "./reducers/meta-reducer";
-import walletReducer from "./reducers/wallet-reducer";
+import metaReducer from './reducers/meta-reducer'
+import walletReducer from './reducers/wallet-reducer'
 
 export default configureStore({
   reducer: {
     metaReducer,
-    walletReducer,
+    walletReducer
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
-      serializableCheck: false,
-    }),
-});
+      serializableCheck: false
+    })
+})
