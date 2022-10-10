@@ -1,16 +1,23 @@
 {
   "files": {
-    "main.css": "/risk-on-web/static/css/main.073c9b0a.css",
-    "main.js": "/risk-on-web/static/js/main.c23d3f9f.js",
+    "main.css": "/risk-on-web/static/css/main.18944cf3.css",
+    "main.js": "/risk-on-web/static/js/main.ca18c853.js",
+    "static/js/734.8a67df8b.chunk.js": "/risk-on-web/static/js/734.8a67df8b.chunk.js",
+    "static/js/628.45723db1.chunk.js": "/risk-on-web/static/js/628.45723db1.chunk.js",
+    "static/js/748.d235d80a.chunk.js": "/risk-on-web/static/js/748.d235d80a.chunk.js",
+    "static/js/839.e702aa91.chunk.js": "/risk-on-web/static/js/839.e702aa91.chunk.js",
     "static/js/787.14efd592.chunk.js": "/risk-on-web/static/js/787.14efd592.chunk.js",
-    "static/media/logo.svg": "/risk-on-web/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/risk-on-web/index.html",
-    "main.073c9b0a.css.map": "/risk-on-web/static/css/main.073c9b0a.css.map",
-    "main.c23d3f9f.js.map": "/risk-on-web/static/js/main.c23d3f9f.js.map",
+    "main.18944cf3.css.map": "/risk-on-web/static/css/main.18944cf3.css.map",
+    "main.ca18c853.js.map": "/risk-on-web/static/js/main.ca18c853.js.map",
+    "734.8a67df8b.chunk.js.map": "/risk-on-web/static/js/734.8a67df8b.chunk.js.map",
+    "628.45723db1.chunk.js.map": "/risk-on-web/static/js/628.45723db1.chunk.js.map",
+    "748.d235d80a.chunk.js.map": "/risk-on-web/static/js/748.d235d80a.chunk.js.map",
+    "839.e702aa91.chunk.js.map": "/risk-on-web/static/js/839.e702aa91.chunk.js.map",
     "787.14efd592.chunk.js.map": "/risk-on-web/static/js/787.14efd592.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.073c9b0a.css",
-    "static/js/main.c23d3f9f.js"
+    "static/css/main.18944cf3.css",
+    "static/js/main.ca18c853.js"
   ]
 }
