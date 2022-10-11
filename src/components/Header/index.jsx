@@ -1,7 +1,9 @@
 import React from 'react'
 
 // === Components === //
-import { Button } from 'antd'
+import { Link } from 'react-router-dom'
+import { Button, Row, Col, Menu, Dropdown } from 'antd'
+import { UserOutlined, LoginOutlined } from '@ant-design/icons'
 
 // === Hooks === //
 import { useSelector } from 'react-redux'
@@ -13,19 +15,38 @@ import isEmpty from 'lodash/isEmpty'
 const Header = () => {
   const { disconnect, connect } = useWallet()
   const provider = useSelector(state => state.walletReducer.provider)
+
+  const menu = (
+    <Menu
+      onClick={disconnect}
+      items={[
+        {
+          label: 'Disconnect',
+          key: '1',
+          icon: <LoginOutlined />
+        }
+      ]}
+    />
+  )
   return (
-    <div>
-      Header, address:{provider?.selectedAddress}
-      {!isEmpty(provider?.selectedAddress) ? (
-        <Button type="primary" onClick={disconnect}>
-          disconnect
-        </Button>
-      ) : (
-        <Button type="primary" onClick={() => connect()}>
-          connect
-        </Button>
-      )}
-    </div>
+    <Row>
+      <Col span={12}>
+        <Link to="/">
+          <img src="https://bankofchain.io/logo.svg" alt="" style={{ width: '173px', height: '27px' }} />
+        </Link>
+      </Col>
+      <Col span={12} style={{ textAlign: 'right' }}>
+        {!isEmpty(provider?.selectedAddress) ? (
+          <Dropdown.Button overlay={menu} placement="bottomRight" icon={<UserOutlined />}>
+            {provider?.selectedAddress}
+          </Dropdown.Button>
+        ) : (
+          <Button type="primary" onClick={() => connect()}>
+            Connect
+          </Button>
+        )}
+      </Col>
+    </Row>
   )
 }
 

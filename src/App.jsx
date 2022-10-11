@@ -2,7 +2,9 @@ import React, { useEffect, lazy, Suspense } from 'react'
 import { HashRouter, Routes, Route } from 'react-router-dom'
 
 // === Components === //
-import Header from '@/components/Header'
+import { Layout } from 'antd'
+import HeaderComponent from '@/components/Header'
+import FooterComponent from '@/components/Footer'
 
 // === Hooks === //
 import useWallet from '@/hooks/useWallet'
@@ -12,6 +14,8 @@ import { isInMobileWalletApp, isInMobileH5 } from '@/helpers/plugin-util'
 
 // === Styles === //
 import './App.css'
+
+const { Header, Footer, Content } = Layout
 
 // === Pages === //
 const Home = lazy(() => import('./pages/Home/index'))
@@ -31,46 +35,52 @@ function App() {
   }, [connect, web3Modal.cachedProvider, walletName])
 
   return (
-    <div className="App">
-      <Header />
-      {/* 这里到时候可以添加通用头和脚 */}
-      <HashRouter>
-        <Routes>
-          <Route
-            index
-            element={
-              <Suspense>
-                <Home />
-              </Suspense>
-            }
-          />
-          <Route
-            path="add"
-            element={
-              <Suspense>
-                <Add />
-              </Suspense>
-            }
-          />
-          <Route
-            path="deposit"
-            element={
-              <Suspense>
-                <Deposit />
-              </Suspense>
-            }
-          />
-          <Route
-            path="analysis"
-            element={
-              <Suspense>
-                <Analysis />
-              </Suspense>
-            }
-          />
-        </Routes>
-      </HashRouter>
-    </div>
+    <HashRouter>
+      <Layout>
+        <Header>
+          <HeaderComponent />
+        </Header>
+        <Content>
+          <Routes>
+            <Route
+              index
+              element={
+                <Suspense>
+                  <Home />
+                </Suspense>
+              }
+            />
+            <Route
+              path="add"
+              element={
+                <Suspense>
+                  <Add />
+                </Suspense>
+              }
+            />
+            <Route
+              path="deposit"
+              element={
+                <Suspense>
+                  <Deposit />
+                </Suspense>
+              }
+            />
+            <Route
+              path="analysis"
+              element={
+                <Suspense>
+                  <Analysis />
+                </Suspense>
+              }
+            />
+          </Routes>
+        </Content>
+        <Footer>
+          <FooterComponent />
+        </Footer>
+      </Layout>
+    </HashRouter>
   )
 }
 
