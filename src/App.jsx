@@ -35,12 +35,12 @@ function App() {
   }, [connect, web3Modal.cachedProvider, walletName])
 
   return (
-    <Layout>
-      <Header>
-        <HeaderComponent />
-      </Header>
-      <Content>
-        <HashRouter>
+    <HashRouter>
+      <Layout>
+        <Header>
+          <HeaderComponent />
+        </Header>
+        <Content>
           <Routes>
             <Route
               index
@@ -75,12 +75,12 @@ function App() {
               }
             />
           </Routes>
-        </HashRouter>
-      </Content>
-      <Footer>
-        <FooterComponent />
-      </Footer>
-    </Layout>
+        </Content>
+        <Footer>
+          <FooterComponent />
+        </Footer>
+      </Layout>
+    </HashRouter>
   )
 }
 

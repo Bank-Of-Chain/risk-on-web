@@ -1,6 +1,7 @@
 import React from 'react'
 
 // === Components === //
+import { Link } from 'react-router-dom'
 import { Button, Row, Col, Menu, Dropdown } from 'antd'
 import { UserOutlined, LoginOutlined } from '@ant-design/icons'
 
@@ -30,7 +31,9 @@ const Header = () => {
   return (
     <Row>
       <Col span={12}>
-        <img src="https://bankofchain.io/logo.svg" alt="" style={{ width: '173px', height: '27px' }} />
+        <Link to="/">
+          <img src="https://bankofchain.io/logo.svg" alt="" style={{ width: '173px', height: '27px' }} />
+        </Link>
       </Col>
       <Col span={12} style={{ textAlign: 'right' }}>
         {!isEmpty(provider?.selectedAddress) ? (
