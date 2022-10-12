@@ -23,7 +23,7 @@ const Add = () => {
             </Button>
           }
         >
-          <Row gutter={[24, 24]}>
+          <Row gutter={[12, 12]}>
             <Col span={24}>
               <Descriptions column={1}>
                 <Descriptions.Item label="Vault">{VAULT_ADDRESS}</Descriptions.Item>
@@ -37,14 +37,14 @@ const Add = () => {
               </Descriptions>
             </Col>
             <Col span={24}>
-              <Space>
-                <Button block type="primary">
-                  Ok
-                </Button>
-                <Button block type="primary" danger>
-                  <Link to="/">Cancel</Link>
-                </Button>
-              </Space>
+              <Button block type="primary">
+                Ok
+              </Button>
+            </Col>
+            <Col span={24}>
+              <Button block type="primary" danger>
+                <Link to="/">Cancel</Link>
+              </Button>
             </Col>
           </Row>
         </Card>

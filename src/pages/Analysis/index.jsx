@@ -5,7 +5,12 @@ import ReactECharts from 'echarts-for-react'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { Row, Col, Card } from 'antd'
 
+// === Hooks === //
+import { useParams } from 'react-router-dom'
+
 const Analysis = () => {
+  const params = useParams()
+  console.log('params=', params)
   const options = {
     grid: { top: 8, right: 8, bottom: 24, left: 36 },
     xAxis: {
@@ -32,7 +37,7 @@ const Analysis = () => {
     </Card>
   )
   return (
-    <Row>
+    <Row gutter={[12, 12]}>
       <Col span={12}>{element}</Col>
       <Col span={12}>{element}</Col>
       <Col span={12}>{element}</Col>

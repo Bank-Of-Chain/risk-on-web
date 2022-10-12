@@ -8,13 +8,7 @@ const Home = () => {
   const [personalVault, setPersonalVault] = useState([])
 
   useEffect(() => {
-    setPersonalVault([
-      'Racing car sprays burning fuel into crowd.',
-      'Japanese princess to wed commoner.',
-      'Australian walks 100km after outback crash.',
-      'Man charged over missing wedding girl.',
-      'Los Angeles battles huge wildfires.'
-    ])
+    setPersonalVault(['Racing car sd.', 'Japanese prinner.', 'Australian walcrash.', 'Man charged ogirl.', 'Los Angeles bfires.'])
   }, [])
 
   return (
@@ -37,8 +31,11 @@ const Home = () => {
                 renderItem={(item, index) => (
                   <List.Item
                     actions={[
-                      <Button type="link">
-                        <Link to={`/deposit/${index}`}>Deposit-{index}</Link>
+                      <Button type="link" key="deposit">
+                        <Link to={`/deposit/${index}`}>Deposit</Link>
+                      </Button>,
+                      <Button type="link" key="analysis">
+                        <Link to={`/analysis/${index}`}>Analysis</Link>
                       </Button>
                     ]}
                   >
