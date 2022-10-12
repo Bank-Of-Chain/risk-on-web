@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/risk-on-web/static/css/main.18944cf3.css",
-    "main.js": "/risk-on-web/static/js/main.150392cb.js",
-    "static/js/11.68c4c604.chunk.js": "/risk-on-web/static/js/11.68c4c604.chunk.js",
-    "static/js/849.668c4fdf.chunk.js": "/risk-on-web/static/js/849.668c4fdf.chunk.js",
-    "static/js/57.22b1305d.chunk.js": "/risk-on-web/static/js/57.22b1305d.chunk.js",
+    "main.css": "/risk-on-web/static/css/main.dea894b5.css",
+    "main.js": "/risk-on-web/static/js/main.ccf837e6.js",
+    "static/js/11.b4a1aadd.chunk.js": "/risk-on-web/static/js/11.b4a1aadd.chunk.js",
+    "static/js/849.55883925.chunk.js": "/risk-on-web/static/js/849.55883925.chunk.js",
+    "static/js/57.9f892734.chunk.js": "/risk-on-web/static/js/57.9f892734.chunk.js",
     "static/js/4.cf7c4675.chunk.js": "/risk-on-web/static/js/4.cf7c4675.chunk.js",
     "static/js/111.a0d3f7bb.chunk.js": "/risk-on-web/static/js/111.a0d3f7bb.chunk.js",
     "static/js/448.2c0a0928.chunk.js": "/risk-on-web/static/js/448.2c0a0928.chunk.js",
     "index.html": "/risk-on-web/index.html",
-    "main.18944cf3.css.map": "/risk-on-web/static/css/main.18944cf3.css.map",
-    "main.150392cb.js.map": "/risk-on-web/static/js/main.150392cb.js.map",
-    "11.68c4c604.chunk.js.map": "/risk-on-web/static/js/11.68c4c604.chunk.js.map",
-    "849.668c4fdf.chunk.js.map": "/risk-on-web/static/js/849.668c4fdf.chunk.js.map",
-    "57.22b1305d.chunk.js.map": "/risk-on-web/static/js/57.22b1305d.chunk.js.map",
+    "main.dea894b5.css.map": "/risk-on-web/static/css/main.dea894b5.css.map",
+    "main.ccf837e6.js.map": "/risk-on-web/static/js/main.ccf837e6.js.map",
+    "11.b4a1aadd.chunk.js.map": "/risk-on-web/static/js/11.b4a1aadd.chunk.js.map",
+    "849.55883925.chunk.js.map": "/risk-on-web/static/js/849.55883925.chunk.js.map",
+    "57.9f892734.chunk.js.map": "/risk-on-web/static/js/57.9f892734.chunk.js.map",
     "4.cf7c4675.chunk.js.map": "/risk-on-web/static/js/4.cf7c4675.chunk.js.map",
     "111.a0d3f7bb.chunk.js.map": "/risk-on-web/static/js/111.a0d3f7bb.chunk.js.map",
     "448.2c0a0928.chunk.js.map": "/risk-on-web/static/js/448.2c0a0928.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.18944cf3.css",
-    "static/js/main.150392cb.js"
+    "static/css/main.dea894b5.css",
+    "static/js/main.ccf837e6.js"
   ]
 }
