@@ -8,6 +8,8 @@ import { Row, Col, Card } from 'antd'
 // === Hooks === //
 import { useParams } from 'react-router-dom'
 
+import styles from './style.module.css'
+
 const Analysis = () => {
   const params = useParams()
   console.log('params=', params)
@@ -37,12 +39,33 @@ const Analysis = () => {
     </Card>
   )
   return (
-    <Row gutter={[12, 12]}>
-      <Col span={12}>{element}</Col>
-      <Col span={12}>{element}</Col>
-      <Col span={12}>{element}</Col>
-      <Col span={12}>{element}</Col>
-    </Row>
+    <>
+      <Row gutter={12}>
+        <Col span={6}>
+          <Card title="Default size card" extra={<InfoCircleOutlined />}>
+            <p>Content</p>
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card title="Default size card" extra={<InfoCircleOutlined />}>
+            <p>Content</p>
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card title="Default size card" extra={<InfoCircleOutlined />}>
+            <p>Content</p>
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card title="Default size card" extra={<InfoCircleOutlined />}>
+            <p>Content</p>
+          </Card>
+        </Col>
+      </Row>
+      <Row className={styles.chart}>
+        <Col span={24}>{element}</Col>
+      </Row>
+    </>
   )
 }
 
