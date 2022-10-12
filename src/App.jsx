@@ -59,7 +59,7 @@ function App() {
               }
             />
             <Route
-              path="deposit"
+              path="deposit/:vaultId"
               element={
                 <Suspense>
                   <Deposit />

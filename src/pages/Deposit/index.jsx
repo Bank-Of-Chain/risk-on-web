@@ -1,13 +1,14 @@
 import React from 'react'
 
 // === Components === //
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Button } from 'antd'
 
 const Deposit = () => {
+  const params = useParams()
   return (
     <div>
-      <p>Deposit</p>
+      <p>Deposit-{params?.vaultId}</p>
       <Button type="primary">
         <Link to="/">go to /home</Link>
       </Button>
