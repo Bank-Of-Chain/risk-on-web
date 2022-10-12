@@ -6,7 +6,7 @@ import { Button, Row, Col, Card, List } from 'antd'
 
 import styles from './style.module.css'
 
-import logoWETH from '@/images/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2.png'
+const logoWETH = 'https://bankofchain.io/images/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2.png'
 
 const Home = () => {
   const [personalVault, setPersonalVault] = useState([])
