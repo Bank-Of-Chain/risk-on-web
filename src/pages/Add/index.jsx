@@ -2,7 +2,7 @@ import React from 'react'
 
 // === Components === //
 import { Link } from 'react-router-dom'
-import { Button, Row, Col, Card, Descriptions, Tag, Space } from 'antd'
+import { Button, Row, Col, Card, Descriptions, Tag } from 'antd'
 
 // === Hooks === //
 import useRiskOnVault from '@/hooks/useRiskOnVault'
