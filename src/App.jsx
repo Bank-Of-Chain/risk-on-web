@@ -61,7 +61,7 @@ function App() {
               }
             />
             <Route
-              path="deposit"
+              path="deposit/:personalVaultId"
               element={
                 <Suspense>
                   <Deposit />
@@ -69,7 +69,7 @@ function App() {
               }
             />
             <Route
-              path="analysis"
+              path="analysis/:personalVaultId"
               element={
                 <Suspense>
                   <Analysis />

@@ -243,3 +243,5 @@ export const IERC20_ABI = [
     type: 'event'
   }
 ]
+
+export const VAULT_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
