@@ -3,6 +3,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom'
 
 // === Components === //
 import { Layout } from 'antd'
+import Loading from '@/components/Loading'
 import HeaderComponent from '@/components/Header'
 import FooterComponent from '@/components/Footer'
 
@@ -47,7 +48,7 @@ function App() {
             <Route
               index
               element={
-                <Suspense>
+                <Suspense fallback={<Loading />}>
                   <Home />
                 </Suspense>
               }
@@ -55,7 +56,7 @@ function App() {
             <Route
               path="add"
               element={
-                <Suspense>
+                <Suspense fallback={<Loading />}>
                   <Add />
                 </Suspense>
               }
@@ -63,7 +64,7 @@ function App() {
             <Route
               path="deposit/:personalVaultId"
               element={
-                <Suspense>
+                <Suspense fallback={<Loading />}>
                   <Deposit />
                 </Suspense>
               }
@@ -71,7 +72,7 @@ function App() {
             <Route
               path="analysis/:personalVaultId"
               element={
-                <Suspense>
+                <Suspense fallback={<Loading />}>
                   <Analysis />
                 </Suspense>
               }
