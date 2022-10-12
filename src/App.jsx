@@ -13,6 +13,8 @@ import useWallet from '@/hooks/useWallet'
 import { isInMobileWalletApp, isInMobileH5 } from '@/helpers/plugin-util'
 
 // === Styles === //
+import './theme/dark.css'
+import './theme/light.css'
 import './App.css'
 
 const { Header, Footer, Content } = Layout
