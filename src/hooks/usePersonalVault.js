@@ -8,8 +8,7 @@ import isEmpty from 'lodash/isEmpty'
 import { useSelector } from 'react-redux'
 
 // === Constants === //
-import { IERC20_ABI } from '@/constants'
-import { USDC_ADDRESS } from '@/constants/tokens'
+import { IUNISWAPV3_RISK_ON_VAULT } from '@/constants'
 import { Contract } from 'ethers'
 
 const usePersonalVault = (array = []) => {
@@ -22,11 +21,11 @@ const usePersonalVault = (array = []) => {
     setLoading(true)
     Promise.all(
       map(array, async address => {
-        const contract = new Contract(address, IERC20_ABI, userProvider)
+        const contract = new Contract(address, IUNISWAPV3_RISK_ON_VAULT, userProvider)
         return {
           name: (await contract.name()) || address,
           address,
-          token: USDC_ADDRESS,
+          token: (await contract.getStatus())._wantToken,
           type: ''
         }
       })

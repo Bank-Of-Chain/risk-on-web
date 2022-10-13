@@ -11,11 +11,13 @@ import useNameHooks from '@/hooks/useNameHooks'
 import * as ethers from 'ethers'
 
 // === Constants === //
-import { USDC_ADDRESS, WETH_ADDRESS } from '@/constants/tokens'
+import { USDC_ADDRESS, WETH_ADDRESS, ZERO_ADDRESS } from '@/constants/tokens'
 import { VAULT_FACTORY_ABI } from '@/constants'
 import map from 'lodash/map'
 import isEmpty from 'lodash/isEmpty'
+import flatten from 'lodash/flatten'
 import { Spin } from 'antd'
+import { filter } from 'lodash'
 
 const { Option } = Select
 const { Contract } = ethers
@@ -26,6 +28,7 @@ const useRiskOnVault = vaultFactoryAddress => {
   const provider = useSelector(state => state.walletReducer.provider)
   const userProvider = useSelector(state => state.walletReducer.userProvider)
   const [vaultImplList, setVaultImplList] = useState([])
+  const [personalVault, setPersonalVault] = useState([])
   const { data: tokenArray, loading: tokenLoading } = useNameHooks(tokens)
   const { data: typeArray, loading: typeLoading } = useNameHooks(vaultImplList)
   const [type, setType] = useState()
@@ -69,11 +72,10 @@ const useRiskOnVault = vaultFactoryAddress => {
   )
 
   const addVault = useCallback(() => {
-    const UniswapV3RiskOnHelper = '0x47Ec97bFC4E57937087cA8B44B60DeEC860d31a4'
     const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
     vaultFactoryContract
       .connect(userProvider.getSigner())
-      .estimateGas.createNewVault(token, UniswapV3RiskOnHelper, type)
+      .createNewVault(token, type)
       .then(tx => tx.wait())
   }, [vaultFactoryAddress, userProvider, token, type])
 
@@ -84,14 +86,15 @@ const useRiskOnVault = vaultFactoryAddress => {
   }, [vaultFactoryAddress, userProvider])
 
   const getVaultImplListByUser = useCallback(() => {
-    if (isEmpty(vaultFactoryAddress) || isEmpty(userProvider)) return
+    if (isEmpty(vaultFactoryAddress) || isEmpty(userProvider) || isEmpty(vaultImplList)) return
     const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
-    vaultFactoryContract.getVaultImplList().then(setVaultImplList)
-    const requestArray = map(vaultImplList, i => {
-      return vaultFactoryContract.vaultAddressMap(userAddress, i, 0)
+    const requestArray = map(vaultImplList, implAddress => {
+      return [vaultFactoryContract.vaultAddressMap(userAddress, implAddress, 0), vaultFactoryContract.vaultAddressMap(userAddress, implAddress, 1)]
     })
-    Promise.all(requestArray).then(console.log)
-  }, [userAddress, vaultFactoryAddress, userProvider])
+    Promise.all(flatten(requestArray)).then(resp => {
+      setPersonalVault(filter(resp, i => i !== ZERO_ADDRESS))
+    })
+  }, [userAddress, vaultFactoryAddress, userProvider, vaultImplList])
 
   useEffect(getVaultImplList, [getVaultImplList])
 
@@ -104,6 +107,7 @@ const useRiskOnVault = vaultFactoryAddress => {
     type,
     token,
     vaultImplList,
+    personalVault,
     // elements
     typeSelector,
     tokenSelector,

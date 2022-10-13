@@ -15,8 +15,8 @@ import usePersonalVault from '@/hooks/usePersonalVault'
 import { VAULT_FACTORY_ADDRESS } from '@/constants'
 
 const Home = () => {
-  const { vaultImplList } = useRiskOnVault(VAULT_FACTORY_ADDRESS)
-  const { data, loading } = usePersonalVault(vaultImplList)
+  const { personalVault } = useRiskOnVault(VAULT_FACTORY_ADDRESS)
+  const { data, loading } = usePersonalVault(personalVault)
 
   const copyAddress = text => {
     //TODO:
@@ -40,12 +40,22 @@ const Home = () => {
                   }
                   bordered
                   dataSource={data}
-                  renderItem={(item, index) => {
+                  renderItem={item => {
                     const { address, name, token } = item
                     return (
-                      <List.Item actions={[<Link to={`/deposit/${index}`}>Deposit</Link>, <Link to={`/analysis/${index}`}>Analysis</Link>]}>
+                      <List.Item actions={[<Link to={`/deposit/${address}`}>Deposit</Link>, <Link to={`/analysis/${address}`}>Analysis</Link>]}>
                         <List.Item.Meta
-                          avatar={<img className={styles.logo} src={`https://bankofchain.io/images/${token}.png`} alt="" />}
+                          avatar={
+                            <img
+                              alt={token}
+                              className={styles.logo}
+                              src={`https://bankofchain.io/images/${token}.png`}
+                              onError={({ currentTarget }) => {
+                                currentTarget.onerror = null // prevents looping
+                                currentTarget.src = 'https://bankofchain.io/default.png'
+                              }}
+                            />
+                          }
                           title={<span>{name}</span>}
                           description={
                             <Space>

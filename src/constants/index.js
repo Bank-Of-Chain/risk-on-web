@@ -258,6 +258,16 @@ export const VAULT_FACTORY_ABI = [
         internalType: 'address',
         name: '_accessControlProxy',
         type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_uniswapV3RiskOnHelper',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_valueInterpreter',
+        type: 'address'
       }
     ],
     stateMutability: 'nonpayable',
@@ -362,11 +372,6 @@ export const VAULT_FACTORY_ABI = [
       },
       {
         internalType: 'address',
-        name: '_uniswapV3RiskOnHelper',
-        type: 'address'
-      },
-      {
-        internalType: 'address',
         name: '_vaultImpl',
         type: 'address'
       }
@@ -374,6 +379,19 @@ export const VAULT_FACTORY_ABI = [
     name: 'createNewVault',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getTotalVaultAddrList',
+    outputs: [
+      {
+        internalType: 'contract IUniswapV3RiskOnVaultInitialize[]',
+        name: '',
+        type: 'address[]'
+      }
+    ],
+    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -414,6 +432,32 @@ export const VAULT_FACTORY_ABI = [
     outputs: [
       {
         internalType: 'contract IUniswapV3RiskOnVaultInitialize',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'uniswapV3RiskOnHelper',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'valueInterpreter',
+    outputs: [
+      {
+        internalType: 'address',
         name: '',
         type: 'address'
       }
@@ -483,6 +527,455 @@ export const VAULT_FACTORY_ABI = [
         internalType: 'address',
         name: '',
         type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  }
+]
+
+export const IUNISWAPV3_RISK_ON_VAULT = [
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256'
+      }
+    ],
+    name: 'LendToStrategy',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_redeemAmount',
+        type: 'uint256'
+      }
+    ],
+    name: 'Redeem',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_redeemAmount',
+        type: 'uint256'
+      }
+    ],
+    name: 'RedeemToVault',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: '_shutdown',
+        type: 'bool'
+      }
+    ],
+    name: 'SetEmergencyShutdown',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address[]',
+        name: '_rewardTokens',
+        type: 'address[]'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: '_claimAmounts',
+        type: 'uint256[]'
+      }
+    ],
+    name: 'StrategyReported',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [],
+    name: 'UniV3UpdateConfig',
+    type: 'event'
+  },
+  {
+    inputs: [],
+    name: 'borrowRebalance',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'emergencyShutdown',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'estimatedTotalAssets',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_totalAssets',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getMintInfo',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_baseTokenId',
+        type: 'uint256'
+      },
+      {
+        internalType: 'int24',
+        name: '_baseTickUpper',
+        type: 'int24'
+      },
+      {
+        internalType: 'int24',
+        name: '_baseTickLower',
+        type: 'int24'
+      },
+      {
+        internalType: 'uint256',
+        name: '_limitTokenId',
+        type: 'uint256'
+      },
+      {
+        internalType: 'int24',
+        name: '_limitTickUpper',
+        type: 'int24'
+      },
+      {
+        internalType: 'int24',
+        name: '_limitTickLower',
+        type: 'int24'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getStatus',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '_owner',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_wantToken',
+        type: 'address'
+      },
+      {
+        internalType: 'int24',
+        name: '_baseThreshold',
+        type: 'int24'
+      },
+      {
+        internalType: 'int24',
+        name: '_limitThreshold',
+        type: 'int24'
+      },
+      {
+        internalType: 'int24',
+        name: '_minTickMove',
+        type: 'int24'
+      },
+      {
+        internalType: 'int24',
+        name: '_maxTwapDeviation',
+        type: 'int24'
+      },
+      {
+        internalType: 'int24',
+        name: '_lastTick',
+        type: 'int24'
+      },
+      {
+        internalType: 'int24',
+        name: '_tickSpacing',
+        type: 'int24'
+      },
+      {
+        internalType: 'uint256',
+        name: '_period',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_lastTimestamp',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint32',
+        name: '_twapDuration',
+        type: 'uint32'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getVersion',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string'
+      }
+    ],
+    stateMutability: 'pure',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'harvest',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '_rewardsTokens',
+        type: 'address[]'
+      },
+      {
+        internalType: 'uint256[]',
+        name: '_claimAmounts',
+        type: 'uint256[]'
+      }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256'
+      }
+    ],
+    name: 'lend',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'name',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'netMarketMakingAmount',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'rebalanceByKeeper',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_redeemShares',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_totalShares',
+        type: 'uint256'
+      }
+    ],
+    name: 'redeem',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_redeemBalance',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_redeemShares',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_totalShares',
+        type: 'uint256'
+      }
+    ],
+    name: 'redeemToVaultByKeeper',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_redeemBalance',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'int24',
+        name: '_baseThreshold',
+        type: 'int24'
+      }
+    ],
+    name: 'setBaseThreshold',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bool',
+        name: '_active',
+        type: 'bool'
+      }
+    ],
+    name: 'setEmergencyShutdown',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'int24',
+        name: '_limitThreshold',
+        type: 'int24'
+      }
+    ],
+    name: 'setLimitThreshold',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'int24',
+        name: '_maxTwapDeviation',
+        type: 'int24'
+      }
+    ],
+    name: 'setMaxTwapDeviation',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'int24',
+        name: '_minTickMove',
+        type: 'int24'
+      }
+    ],
+    name: 'setMinTickMove',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_period',
+        type: 'uint256'
+      }
+    ],
+    name: 'setPeriod',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint32',
+        name: '_twapDuration',
+        type: 'uint32'
+      }
+    ],
+    name: 'setTwapDuration',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'int24',
+        name: '_tick',
+        type: 'int24'
+      }
+    ],
+    name: 'shouldRebalance',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool'
       }
     ],
     stateMutability: 'view',
