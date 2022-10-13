@@ -1,0 +1,12 @@
+.logo {
+  width: 30px;
+  border-radius: 50%;
+}
+
+.max {
+  cursor: pointer;
+}
+
+.asset {
+  margin-top: 4px;
+}
