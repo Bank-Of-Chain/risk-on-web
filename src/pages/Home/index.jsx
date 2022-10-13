@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 // === Components === //
 import { Link } from 'react-router-dom'
 import { Button, Row, Col, Typography, Card, List } from 'antd'
 
-const Home = () => {
-  const [personalVault, setPersonalVault] = useState([])
+// === Hooks === //
+import useRiskOnVault from '../../hooks/useRiskOnVault'
 
-  useEffect(() => {
-    setPersonalVault(['Racing car sd.', 'Japanese prinner.', 'Australian walcrash.', 'Man charged ogirl.', 'Los Angeles bfires.'])
-  }, [])
+// === Constants === //
+import { VAULT_FACTORY_ADDRESS } from '@/constants'
+
+const Home = () => {
+  const { vaultImplList } = useRiskOnVault(VAULT_FACTORY_ADDRESS)
 
   return (
     <Row>
@@ -27,7 +29,7 @@ const Home = () => {
                   </div>
                 }
                 bordered
-                dataSource={personalVault}
+                dataSource={vaultImplList}
                 renderItem={(item, index) => (
                   <List.Item
                     actions={[

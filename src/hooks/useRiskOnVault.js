@@ -1,34 +1,44 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 // === Components === //
 import { Select } from 'antd'
 
 // === Hooks === //
+import { useSelector } from 'react-redux'
 import useNameHooks from '@/hooks/useNameHooks'
 
+// === Utils === //
+import * as ethers from 'ethers'
+
 // === Constants === //
-import { LUSD_ADDRESS, USDC_ADDRESS, SUSD_ADDRESS, WETH_ADDRESS, GUSD_ADDRESS } from '@/constants/tokens'
-import { map } from 'lodash'
+import { USDC_ADDRESS, WETH_ADDRESS } from '@/constants/tokens'
+import { VAULT_FACTORY_ABI } from '@/constants'
+import map from 'lodash/map'
+import isEmpty from 'lodash/isEmpty'
 
 const { Option } = Select
+const { Contract } = ethers
 
-const tokens = [LUSD_ADDRESS, USDC_ADDRESS, SUSD_ADDRESS]
-const types = [WETH_ADDRESS, GUSD_ADDRESS]
+const tokens = [USDC_ADDRESS, WETH_ADDRESS]
 
-const useRiskOnVault = vaultAddress => {
+const useRiskOnVault = vaultFactoryAddress => {
+  const provider = useSelector(state => state.walletReducer.provider)
+  const userProvider = useSelector(state => state.walletReducer.userProvider)
+  const [vaultImplList, setVaultImplList] = useState([])
   const tokenArray = useNameHooks(tokens)
-  const typeArray = useNameHooks(types)
-  const [type, setType] = useState(types[0])
-  const [token, setToken] = useState(tokens[0])
+  const typeArray = useNameHooks(vaultImplList)
+  const [type, setType] = useState()
+  const [token, setToken] = useState()
 
-  console.log('type=', type, token)
+  const userAddress = provider?.selectedAddress
+
   const reset = () => {
-    setToken(tokens[0])
-    setType(types[0])
+    setToken()
+    setType()
   }
 
   const typeSelector = (
-    <Select value={type} onChange={setType} size="small">
+    <Select value={type} onChange={setType} size="small" style={{ width: 120 }}>
       {map(typeArray, item => {
         const { name, address } = item
         return (
@@ -41,7 +51,7 @@ const useRiskOnVault = vaultAddress => {
   )
 
   const tokenSelector = (
-    <Select value={token} onChange={setToken} size="small">
+    <Select value={token} onChange={setToken} size="small" style={{ width: 120 }}>
       {map(tokenArray, item => {
         const { name, address } = item
         return (
@@ -53,17 +63,45 @@ const useRiskOnVault = vaultAddress => {
     </Select>
   )
 
+  const addVault = useCallback(() => {
+    const UniswapV3RiskOnHelper = '0x47Ec97bFC4E57937087cA8B44B60DeEC860d31a4'
+    const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+    vaultFactoryContract.connect(userProvider.getSigner()).createNewVault(token, UniswapV3RiskOnHelper, type)
+  }, [vaultFactoryAddress, userProvider, token, type])
+
+  const getVaultImplList = useCallback(() => {
+    if (isEmpty(vaultFactoryAddress) || isEmpty(userProvider)) return
+    const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+    vaultFactoryContract.getVaultImplList().then(setVaultImplList)
+  }, [vaultFactoryAddress, userProvider])
+
+  const getVaultImplListByUser = useCallback(() => {
+    if (isEmpty(vaultFactoryAddress) || isEmpty(userProvider)) return
+    const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+    vaultFactoryContract.getVaultImplList().then(setVaultImplList)
+    const requestArray = map(vaultImplList, i => {
+      return vaultFactoryContract.vaultAddressMap(userAddress, i, 0)
+    })
+    Promise.all(requestArray).then(console.log)
+  }, [userAddress, vaultFactoryAddress, userProvider])
+
+  useEffect(getVaultImplList, [getVaultImplList])
+
+  useEffect(getVaultImplListByUser, [getVaultImplListByUser])
+
   const isSupport = true
   return {
-    vaultAddress,
+    vaultFactoryAddress,
     isSupport,
     type,
     token,
+    vaultImplList,
     // elements
     typeSelector,
     tokenSelector,
     // functions
-    reset
+    reset,
+    addVault
   }
 }
 

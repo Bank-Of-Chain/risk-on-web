@@ -8,10 +8,10 @@ import { Button, Row, Col, Card, Descriptions, Tag } from 'antd'
 import useRiskOnVault from '@/hooks/useRiskOnVault'
 
 // === Constants === //
-import { VAULT_ADDRESS } from '@/constants'
+import { VAULT_FACTORY_ADDRESS } from '@/constants'
 
 const Add = () => {
-  const { typeSelector, tokenSelector, isSupport, reset } = useRiskOnVault(VAULT_ADDRESS)
+  const { typeSelector, tokenSelector, isSupport, reset, addVault } = useRiskOnVault(VAULT_FACTORY_ADDRESS)
   return (
     <Row>
       <Col span={12} push={6}>
@@ -26,9 +26,7 @@ const Add = () => {
           <Row gutter={[12, 12]}>
             <Col span={24}>
               <Descriptions column={1}>
-                <Descriptions.Item label="Vault">{VAULT_ADDRESS}</Descriptions.Item>
-              </Descriptions>
-              <Descriptions>
+                <Descriptions.Item label="Vault">{VAULT_FACTORY_ADDRESS}</Descriptions.Item>
                 <Descriptions.Item label="Type">{typeSelector}</Descriptions.Item>
                 <Descriptions.Item label="Token">{tokenSelector}</Descriptions.Item>
                 <Descriptions.Item label="Support">
@@ -37,7 +35,7 @@ const Add = () => {
               </Descriptions>
             </Col>
             <Col span={24}>
-              <Button block type="primary">
+              <Button block type="primary" onClick={addVault}>
                 Ok
               </Button>
             </Col>
