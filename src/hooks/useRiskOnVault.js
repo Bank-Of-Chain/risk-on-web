@@ -29,6 +29,7 @@ const useRiskOnVault = vaultFactoryAddress => {
   const userProvider = useSelector(state => state.walletReducer.userProvider)
   const [vaultImplList, setVaultImplList] = useState([])
   const [personalVault, setPersonalVault] = useState([])
+  const [isSupport, setIsSupport] = useState()
   const { data: tokenArray, loading: tokenLoading } = useNameHooks(tokens)
   const { data: typeArray, loading: typeLoading } = useNameHooks(vaultImplList)
   const [type, setType] = useState()
@@ -43,7 +44,7 @@ const useRiskOnVault = vaultFactoryAddress => {
 
   const typeSelector = (
     <Spin size="small" spinning={typeLoading}>
-      <Select value={type} onChange={setType} size="small" style={{ minWidth: 200 }}>
+      <Select value={type} onChange={setType} size="small" style={{ minWidth: 200 }} placeholder="Select a template">
         {map(typeArray, item => {
           const { name, address } = item
           return (
@@ -58,7 +59,7 @@ const useRiskOnVault = vaultFactoryAddress => {
 
   const tokenSelector = (
     <Spin size="small" spinning={tokenLoading}>
-      <Select value={token} onChange={setToken} size="small" style={{ minWidth: 200 }}>
+      <Select value={token} onChange={setToken} size="small" style={{ minWidth: 200 }} placeholder="Select a want token">
         {map(tokenArray, item => {
           const { name, address } = item
           return (
@@ -96,11 +97,25 @@ const useRiskOnVault = vaultFactoryAddress => {
     })
   }, [userAddress, vaultFactoryAddress, userProvider, vaultImplList])
 
+  const estimateAdd = useCallback(() => {
+    if (isEmpty(token) || isEmpty(type) || isEmpty(userAddress)) {
+      setIsSupport()
+      return
+    }
+    const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+    vaultFactoryContract
+      .connect(userProvider.getSigner())
+      .callStatic.createNewVault(token, type)
+      .then(() => setIsSupport(true))
+      .catch(() => setIsSupport(false))
+  }, [token, type, userAddress, vaultFactoryAddress, userProvider])
+
   useEffect(getVaultImplList, [getVaultImplList])
 
   useEffect(getVaultImplListByUser, [getVaultImplListByUser])
 
-  const isSupport = true
+  useEffect(estimateAdd, [estimateAdd])
+
   return {
     vaultFactoryAddress,
     isSupport,

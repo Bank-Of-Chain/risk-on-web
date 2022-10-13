@@ -22,7 +22,7 @@ const useNameHooks = (array = []) => {
       map(array, async address => {
         const contract = new Contract(address, IERC20_ABI, userProvider)
         return {
-          name: await contract.name(),
+          name: (await contract.name()) || address,
           address
         }
       })

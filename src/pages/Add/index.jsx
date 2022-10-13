@@ -9,6 +9,7 @@ import useRiskOnVault from '@/hooks/useRiskOnVault'
 
 // === Constants === //
 import { VAULT_FACTORY_ADDRESS } from '@/constants'
+import { isUndefined } from 'lodash'
 
 const Add = () => {
   const { typeSelector, tokenSelector, isSupport, reset, addVault } = useRiskOnVault(VAULT_FACTORY_ADDRESS)
@@ -26,11 +27,11 @@ const Add = () => {
           <Row gutter={[12, 12]}>
             <Col span={24}>
               <Descriptions column={1}>
-                <Descriptions.Item label="Vault">{VAULT_FACTORY_ADDRESS}</Descriptions.Item>
+                <Descriptions.Item label="VaultFactory">{VAULT_FACTORY_ADDRESS}</Descriptions.Item>
                 <Descriptions.Item label="Type">{typeSelector}</Descriptions.Item>
                 <Descriptions.Item label="Token">{tokenSelector}</Descriptions.Item>
                 <Descriptions.Item label="Support">
-                  <Tag color={isSupport ? '#87d068' : '#f50'}>{isSupport.toString()}</Tag>
+                  {!isUndefined(isSupport) && <Tag color={isSupport ? '#87d068' : '#f50'}>{isSupport.toString()}</Tag>}
                 </Descriptions.Item>
               </Descriptions>
             </Col>
