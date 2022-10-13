@@ -982,3 +982,166 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
     type: 'function'
   }
 ]
+
+export const IUNISWAPV3_RISK_ON_HELPER = [
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_user',
+        type: 'address'
+      }
+    ],
+    name: 'borrowInfo',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_totalCollateralETH',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_totalDebtETH',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_availableBorrowsETH',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_currentLiquidationThreshold',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_ltv',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_healthFactor',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_asset',
+        type: 'address'
+      }
+    ],
+    name: 'getAToken',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_borrowToken',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: '_interestRateMode',
+        type: 'uint256'
+      },
+      {
+        internalType: 'address',
+        name: '_account',
+        type: 'address'
+      }
+    ],
+    name: 'getCurrentBorrow',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_borrowToken',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: '_interestRateMode',
+        type: 'uint256'
+      }
+    ],
+    name: 'getDebtToken',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'int24',
+        name: '_tick',
+        type: 'int24'
+      },
+      {
+        internalType: 'int24',
+        name: '_tickSpacing',
+        type: 'int24'
+      },
+      {
+        internalType: 'int24',
+        name: '_baseThreshold',
+        type: 'int24'
+      }
+    ],
+    name: 'getSpecifiedRangesOfTick',
+    outputs: [
+      {
+        internalType: 'int24',
+        name: '_tickFloor',
+        type: 'int24'
+      },
+      {
+        internalType: 'int24',
+        name: '_tickCeil',
+        type: 'int24'
+      },
+      {
+        internalType: 'int24',
+        name: '_tickLower',
+        type: 'int24'
+      },
+      {
+        internalType: 'int24',
+        name: '_tickUpper',
+        type: 'int24'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  }
+]
