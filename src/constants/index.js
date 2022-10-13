@@ -244,4 +244,248 @@ export const IERC20_ABI = [
   }
 ]
 
-export const VAULT_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+export const VAULT_FACTORY_ADDRESS = '0x8013Dd64084e9c9122567563AA86981F4C20576B'
+
+export const VAULT_FACTORY_ABI = [
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: '_vaultImplList',
+        type: 'address[]'
+      },
+      {
+        internalType: 'address',
+        name: '_accessControlProxy',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'nonpayable',
+    type: 'constructor'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: '_owner',
+        type: 'address'
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: '_newVault',
+        type: 'address'
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: '_wantToken',
+        type: 'address'
+      }
+    ],
+    name: 'CreateNewVault',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint8',
+        name: 'version',
+        type: 'uint8'
+      }
+    ],
+    name: 'Initialized',
+    type: 'event'
+  },
+  {
+    inputs: [],
+    name: 'USDC_ADDRESS',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'WETH_ADDRESS',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'accessControlProxy',
+    outputs: [
+      {
+        internalType: 'contract IAccessControlProxy',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_vaultImpl',
+        type: 'address'
+      }
+    ],
+    name: 'addVaultImpl',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_wantToken',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_uniswapV3RiskOnHelper',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_vaultImpl',
+        type: 'address'
+      }
+    ],
+    name: 'createNewVault',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getVaultImplList',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '',
+        type: 'address[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getVaultsLen',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    name: 'totalVaultAddrList',
+    outputs: [
+      {
+        internalType: 'contract IUniswapV3RiskOnVaultInitialize',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    name: 'vaultAddressMap',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    name: 'vaultImpl2Index',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    name: 'vaultImplList',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  }
+]
