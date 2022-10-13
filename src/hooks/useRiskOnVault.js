@@ -15,6 +15,7 @@ import { USDC_ADDRESS, WETH_ADDRESS } from '@/constants/tokens'
 import { VAULT_FACTORY_ABI } from '@/constants'
 import map from 'lodash/map'
 import isEmpty from 'lodash/isEmpty'
+import { Spin } from 'antd'
 
 const { Option } = Select
 const { Contract } = ethers
@@ -25,8 +26,8 @@ const useRiskOnVault = vaultFactoryAddress => {
   const provider = useSelector(state => state.walletReducer.provider)
   const userProvider = useSelector(state => state.walletReducer.userProvider)
   const [vaultImplList, setVaultImplList] = useState([])
-  const tokenArray = useNameHooks(tokens)
-  const typeArray = useNameHooks(vaultImplList)
+  const { data: tokenArray, loading: tokenLoading } = useNameHooks(tokens)
+  const { data: typeArray, loading: typeLoading } = useNameHooks(vaultImplList)
   const [type, setType] = useState()
   const [token, setToken] = useState()
 
@@ -38,35 +39,42 @@ const useRiskOnVault = vaultFactoryAddress => {
   }
 
   const typeSelector = (
-    <Select value={type} onChange={setType} size="small" style={{ width: 120 }}>
-      {map(typeArray, item => {
-        const { name, address } = item
-        return (
-          <Option key={address} value={address}>
-            {name}
-          </Option>
-        )
-      })}
-    </Select>
+    <Spin size="small" spinning={typeLoading}>
+      <Select value={type} onChange={setType} size="small" style={{ minWidth: 200 }}>
+        {map(typeArray, item => {
+          const { name, address } = item
+          return (
+            <Option key={address} value={address}>
+              {name}
+            </Option>
+          )
+        })}
+      </Select>
+    </Spin>
   )
 
   const tokenSelector = (
-    <Select value={token} onChange={setToken} size="small" style={{ width: 120 }}>
-      {map(tokenArray, item => {
-        const { name, address } = item
-        return (
-          <Option key={address} value={address}>
-            {name}
-          </Option>
-        )
-      })}
-    </Select>
+    <Spin size="small" spinning={tokenLoading}>
+      <Select value={token} onChange={setToken} size="small" style={{ minWidth: 200 }}>
+        {map(tokenArray, item => {
+          const { name, address } = item
+          return (
+            <Option key={address} value={address}>
+              {name}
+            </Option>
+          )
+        })}
+      </Select>
+    </Spin>
   )
 
   const addVault = useCallback(() => {
     const UniswapV3RiskOnHelper = '0x47Ec97bFC4E57937087cA8B44B60DeEC860d31a4'
     const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
-    vaultFactoryContract.connect(userProvider.getSigner()).createNewVault(token, UniswapV3RiskOnHelper, type)
+    vaultFactoryContract
+      .connect(userProvider.getSigner())
+      .estimateGas.createNewVault(token, UniswapV3RiskOnHelper, type)
+      .then(tx => tx.wait())
   }, [vaultFactoryAddress, userProvider, token, type])
 
   const getVaultImplList = useCallback(() => {
