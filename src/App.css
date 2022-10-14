@@ -8,12 +8,46 @@
 
 html,
 body,
-#root {
+#root,
+.ant-layout {
   height: 100%;
 }
 
+.ant-layout,
+.ant-card {
+  background-color: var(--background-color);
+  color: var(--color);
+}
+
+.ant-layout-footer {
+  background-color: var(--background-color-footer);
+  color: var(--color);
+}
+
+.ant-tabs {
+  color: var(--color);
+}
+
+.ant-input-affix-wrapper {
+  background-color: var(--background-color-input);
+  color: var(--color);
+}
+
+.ant-card,
+.ant-tabs-top > .ant-tabs-nav::before {
+  border-color: var(--border-color);
+}
+
 .ant-layout-content {
+  min-height: 500px;
   padding: 24px;
+}
+
+.ant-switch {
+  background-color: #bfbfbf;
+}
+.ant-switch.ant-switch-checked {
+  background-color: #177ddc;
 }
 
 ::-webkit-scrollbar-thumb {

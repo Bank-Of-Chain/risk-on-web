@@ -1,3 +1,7 @@
 body.light-theme {
-  --background-color: #f0f2f5;
+  --background-color: #fff;
+  --color: rgba(0, 0, 0, 0.85);
+  --border-color: #e0e0e0;
+  --background-color-footer: #f0f2f5;
+  --background-color-input: #fff;
 }

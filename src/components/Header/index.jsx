@@ -17,7 +17,7 @@ import styles from './style.module.css'
 const KEY = 'theme-mode'
 const currentTheme = window.localStorage.getItem(KEY)
 
-const SUN = (
+const MOON = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="16"
@@ -32,7 +32,7 @@ const SUN = (
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
   </svg>
 )
-const MOON = (
+const SUN = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="16"

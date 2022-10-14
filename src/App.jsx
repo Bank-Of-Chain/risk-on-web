@@ -44,7 +44,7 @@ function App() {
         <Header>
           <HeaderComponent />
         </Header>
-        <Content style={{ padding: 20 }}>
+        <Content>
           <Routes>
             <Route
               index
