@@ -96,11 +96,6 @@ const Analysis = () => {
       trigger: 'axis'
     }
   }
-  const element = (
-    <Card title="Default size card" extra={<InfoCircleOutlined />}>
-      <ReactECharts option={options} />
-    </Card>
-  )
 
   const {
     netMarketMakingAmount = BigNumber.from(0),
@@ -174,7 +169,18 @@ const Analysis = () => {
         </Col>
       </Row>
       <Row className={styles.chart}>
-        <Col span={24}>{element}</Col>
+        <Col span={24}>
+          <Card title="Tvl" extra={<InfoCircleOutlined />}>
+            <ReactECharts option={options} />
+          </Card>
+        </Col>
+      </Row>
+      <Row className={styles.chart}>
+        <Col span={24}>
+          <Card title="IRR" extra={<InfoCircleOutlined />}>
+            <ReactECharts option={options} />
+          </Card>
+        </Col>
       </Row>
     </Spin>
   )

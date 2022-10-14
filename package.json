@@ -37,6 +37,8 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "babel-plugin-import": "^1.13.5",
+    "customize-cra": "^1.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "filemanager-webpack-plugin": "^7.0.0",

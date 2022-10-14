@@ -14,6 +14,7 @@ import useWallet from '@/hooks/useWallet'
 import { isInMobileWalletApp, isInMobileH5 } from '@/helpers/plugin-util'
 
 // === Styles === //
+import 'antd/dist/antd.less'
 import './theme/dark.css'
 import './theme/light.css'
 import './App.css'
