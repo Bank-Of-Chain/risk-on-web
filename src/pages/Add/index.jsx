@@ -5,14 +5,22 @@ import { Link } from 'react-router-dom'
 import { Button, Row, Col, Card, Descriptions, Tag } from 'antd'
 
 // === Hooks === //
+import { useSelector } from 'react-redux'
 import useRiskOnVault from '@/hooks/useRiskOnVault'
 
 // === Constants === //
 import { VAULT_FACTORY_ADDRESS } from '@/constants'
-import { isUndefined } from 'lodash'
+
+// === Utils === //
+import isEmpty from 'lodash/isEmpty'
+import isUndefined from 'lodash/isUndefined'
 
 const Add = () => {
   const { typeSelector, tokenSelector, isSupport, reset, addVault } = useRiskOnVault(VAULT_FACTORY_ADDRESS)
+  const provider = useSelector(state => state.walletReducer.provider)
+
+  const userAddress = provider?.selectedAddress
+
   return (
     <Row>
       <Col span={12} push={6}>
@@ -36,7 +44,7 @@ const Add = () => {
               </Descriptions>
             </Col>
             <Col span={24}>
-              <Button block type="primary" onClick={addVault}>
+              <Button block type="primary" onClick={addVault} disabled={isSupport === false || isEmpty(userAddress)}>
                 Ok
               </Button>
             </Col>

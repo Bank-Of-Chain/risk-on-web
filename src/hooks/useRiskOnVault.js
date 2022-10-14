@@ -87,7 +87,7 @@ const useRiskOnVault = vaultFactoryAddress => {
   }, [vaultFactoryAddress, userProvider])
 
   const getVaultImplListByUser = useCallback(() => {
-    if (isEmpty(vaultFactoryAddress) || isEmpty(userProvider) || isEmpty(vaultImplList)) return
+    if (isEmpty(vaultFactoryAddress) || isEmpty(userProvider) || isEmpty(vaultImplList) || isEmpty(userAddress)) return
     const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
     const requestArray = map(vaultImplList, implAddress => {
       return [vaultFactoryContract.vaultAddressMap(userAddress, implAddress, 0), vaultFactoryContract.vaultAddressMap(userAddress, implAddress, 1)]

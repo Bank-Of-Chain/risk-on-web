@@ -2,12 +2,13 @@ import React from 'react'
 
 // === Components === //
 import { Link } from 'react-router-dom'
-import { Button, Row, Col, Card, List, Space, Spin } from 'antd'
+import { Button, Row, Col, Card, List, Space, Spin, Typography } from 'antd'
 import { CopyOutlined } from '@ant-design/icons'
 
 import styles from './style.module.css'
 
 // === Hooks === //
+import { useSelector } from 'react-redux'
 import useRiskOnVault from '@/hooks/useRiskOnVault'
 import usePersonalVault from '@/hooks/usePersonalVault'
 
@@ -17,6 +18,9 @@ import { VAULT_FACTORY_ADDRESS } from '@/constants'
 const Home = () => {
   const { personalVault } = useRiskOnVault(VAULT_FACTORY_ADDRESS)
   const { data, loading } = usePersonalVault(personalVault)
+  const provider = useSelector(state => state.walletReducer.provider)
+
+  const userAddress = provider?.selectedAddress
 
   const copyAddress = text => {
     //TODO:
@@ -32,11 +36,19 @@ const Home = () => {
                 <List
                   header={<div>Personal Vaults</div>}
                   footer={
-                    <div>
-                      <Button type="primary">
-                        <Link to="/add">Add new Vault</Link>
-                      </Button>
-                    </div>
+                    userAddress ? (
+                      <div>
+                        <Button type="primary">
+                          <Link to="/add">Add New Vault</Link>
+                        </Button>
+                      </div>
+                    ) : (
+                      <p style={{ textAlign: 'center' }}>
+                        <Typography.Text strong mark>
+                          Connect wallet firstly!
+                        </Typography.Text>
+                      </p>
+                    )
                   }
                   bordered
                   dataSource={data}

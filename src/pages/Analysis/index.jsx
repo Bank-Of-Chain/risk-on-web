@@ -26,11 +26,12 @@ const Analysis = () => {
   const provider = useSelector(state => state.walletReducer.provider)
   const [data, setData] = useState({})
   const [loading, setLoading] = useState(false)
-  console.log('params=', params, data)
+
   const { personalVaultId } = params
+  const userAddress = provider?.selectedAddress
 
   const load = useCallback(() => {
-    if (isEmpty(personalVaultId)) return
+    if (isEmpty(personalVaultId) || isEmpty(userAddress)) return
     setLoading(true)
     const vaultFactoryContract = new Contract(VAULT_FACTORY_ADDRESS, VAULT_FACTORY_ABI, userProvider)
     vaultFactoryContract.uniswapV3RiskOnHelper().then(helperAddress => {
@@ -39,7 +40,7 @@ const Analysis = () => {
       Promise.all([
         contract.netMarketMakingAmount(),
         contract.estimatedTotalAssets(),
-        helperContract.getCurrentBorrow(USDC_ADDRESS, personalVaultId, provider.selectedAddress),
+        helperContract.getCurrentBorrow(USDC_ADDRESS, personalVaultId, userAddress),
         helperContract.borrowInfo(personalVaultId)
       ])
         .then(
@@ -71,7 +72,7 @@ const Analysis = () => {
           }, 300)
         })
     })
-  }, [personalVaultId, userProvider, provider])
+  }, [personalVaultId, userProvider, userAddress])
 
   useEffect(load, [load])
 

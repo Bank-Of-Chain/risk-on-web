@@ -56,7 +56,7 @@ const Header = () => {
         </Link>
       </Col>
       <Col span={12} style={{ textAlign: 'right' }}>
-        <Switch checked={isDark} checkedChildren="dark" unCheckedChildren="light" onChange={onChange} />
+        {/* <Switch checked={isDark} checkedChildren="dark" unCheckedChildren="light" onChange={onChange} /> */}
         {!isEmpty(provider?.selectedAddress) ? (
           <Dropdown.Button overlay={menu} placement="bottomRight" icon={<UserOutlined />}>
             {provider?.selectedAddress}

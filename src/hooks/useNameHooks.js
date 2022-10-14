@@ -14,9 +14,12 @@ const useNameHooks = (array = []) => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const userProvider = useSelector(state => state.walletReducer.userProvider)
+  const provider = useSelector(state => state.walletReducer.provider)
+
+  const userAddress = provider?.selectedAddress
 
   const load = useCallback(() => {
-    if (isEmpty(array)) return
+    if (isEmpty(array) || isEmpty(userAddress)) return
     setLoading(true)
     Promise.all(
       map(array, async address => {
@@ -35,7 +38,7 @@ const useNameHooks = (array = []) => {
           setLoading(false)
         }, 300)
       })
-  }, [array, userProvider])
+  }, [array, userProvider, userAddress])
 
   useEffect(() => {
     load()
