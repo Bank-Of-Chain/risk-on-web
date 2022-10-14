@@ -14,6 +14,7 @@ specifiers:
   '@testing-library/react': ^13.4.0
   '@testing-library/user-event': ^13.5.0
   antd: ^4.23.4
+  bignumber.js: ^9.1.0
   classnames: ^2.3.2
   echarts: ^3.0.0 || ^4.0.0 || ^5.0.0
   echarts-for-react: ^3.0.2
@@ -49,6 +50,7 @@ dependencies:
   '@reduxjs/toolkit': 1.8.6_kuo2ie247izvzll3jejufdtq3q
   '@testing-library/dom': 8.19.0
   antd: 4.23.4_biqbaboplfbrettd7655fr4n2y
+  bignumber.js: 9.1.0
   classnames: 2.3.2
   echarts: 5.4.0
   echarts-for-react: 3.0.2_echarts@5.4.0+react@18.2.0
@@ -3764,6 +3766,10 @@ packages:
 
   /big.js/5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
+
+  /bignumber.js/9.1.0:
+    resolution: {integrity: sha512-4LwHK4nfDOraBCtst+wOWIHbu1vhvAPJK8g8nROd4iuc3PSEjWif/qwbkh8jwCJz6yDBvtU4KPynETgrfh7y3A==}
+    dev: false
 
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
