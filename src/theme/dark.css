@@ -4,4 +4,5 @@ body.dark-theme {
   --border-color: #303030;
   --background-color-footer: #000;
   --background-color-input: transparent;
+  --color-description: rgba(255, 255, 255, 0.45);
 }

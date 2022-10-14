@@ -4,4 +4,5 @@ body.light-theme {
   --border-color: #e0e0e0;
   --background-color-footer: #f0f2f5;
   --background-color-input: #fff;
+  --color-description: rgba(0, 0, 0, 0.45);
 }

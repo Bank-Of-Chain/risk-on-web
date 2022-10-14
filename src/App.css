@@ -8,13 +8,16 @@
 
 html,
 body,
-#root,
-.ant-layout {
+#root {
   height: 100%;
 }
 
+.ant-layout {
+  min-height: 100%;
+}
+
 .ant-layout,
-.ant-card {
+div.ant-card {
   background-color: var(--background-color);
   color: var(--color);
 }
@@ -24,30 +27,34 @@ body,
   color: var(--color);
 }
 
-.ant-tabs {
+div.ant-tabs,
+div.ant-list,
+h4.ant-list-item-meta-title,
+div.ant-card-head,
+span.ant-descriptions-item-label,
+span.ant-descriptions-item-content {
   color: var(--color);
 }
 
-.ant-input-affix-wrapper {
+.ant-input-affix-wrapper,
+.ant-input {
   background-color: var(--background-color-input);
   color: var(--color);
 }
 
 .ant-card,
-.ant-tabs-top > .ant-tabs-nav::before {
+.ant-tabs-top > .ant-tabs-nav::before,
+.ant-input-affix-wrapper {
   border-color: var(--border-color);
+}
+
+div.ant-list-item-meta-description {
+  color: var(--color-description);
 }
 
 .ant-layout-content {
   min-height: 500px;
   padding: 24px;
-}
-
-.ant-switch {
-  background-color: #bfbfbf;
-}
-.ant-switch.ant-switch-checked {
-  background-color: #177ddc;
 }
 
 ::-webkit-scrollbar-thumb {
