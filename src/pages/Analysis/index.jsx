@@ -40,11 +40,7 @@ const Analysis = () => {
     vaultFactoryContract.uniswapV3RiskOnHelper().then(helperAddress => {
       const contract = new Contract(personalVaultId, IUNISWAPV3_RISK_ON_VAULT, userProvider)
       const helperContract = new Contract(helperAddress, IUNISWAPV3_RISK_ON_HELPER, userProvider)
-      Promise.all([
-        contract.netMarketMakingAmount(),
-        helperContract.getCurrentBorrow(USDC_ADDRESS, 2, personalVaultId),
-        helperContract.getTotalCollateralTokenAmount(personalVaultId, WETH_ADDRESS),
-        contract.depositTo3rdPoolTotalAssets(),
+      return Promise.all([
         contract.borrowToken().then(async i => {
           const tokenContract = new Contract(i, IERC20_ABI, userProvider)
           return { borrowToken: i, name: await tokenContract.symbol(), borrowTokenDecimals: BigNumber.from(10).pow(await tokenContract.decimals()) }
@@ -54,24 +50,31 @@ const Analysis = () => {
           return { wantToken: i, name: await tokenContract.symbol(), wantTokenDecimals: BigNumber.from(10).pow(await tokenContract.decimals()) }
         })
       ])
-        .then(([netMarketMakingAmount, currentBorrow, totalCollateralTokenAmount, estimatedTotalAssets, borrowInfo, wantInfo]) => {
+        .then(([borrowInfo, wantInfo]) => {
           const { borrowToken, borrowTokenDecimals } = borrowInfo
           const { wantToken, wantTokenDecimals } = wantInfo
-          return helperContract.calcCanonicalAssetValue(borrowToken, currentBorrow, wantToken).then(currentBorrowWithCanonical => {
-            const nextData = {
-              netMarketMakingAmount: toFixed(netMarketMakingAmount, wantTokenDecimals),
-              currentBorrow: toFixed(currentBorrow, borrowTokenDecimals),
-              currentBorrowWithCanonical: toFixed(currentBorrowWithCanonical, wantTokenDecimals),
-              estimatedTotalAssets: toFixed(estimatedTotalAssets, wantTokenDecimals),
-              totalCollateralTokenAmount: toFixed(totalCollateralTokenAmount, wantTokenDecimals),
-              wantInfo,
-              borrowInfo,
-              result: toFixed(
-                estimatedTotalAssets.add(totalCollateralTokenAmount).sub(netMarketMakingAmount).sub(currentBorrowWithCanonical),
-                wantTokenDecimals
-              )
-            }
-            setData(nextData)
+          return Promise.all([
+            contract.netMarketMakingAmount(),
+            helperContract.getCurrentBorrow(borrowToken, 2, personalVaultId),
+            helperContract.getTotalCollateralTokenAmount(personalVaultId, wantToken),
+            contract.depositTo3rdPoolTotalAssets()
+          ]).then(([netMarketMakingAmount, currentBorrow, totalCollateralTokenAmount, estimatedTotalAssets]) => {
+            return helperContract.calcCanonicalAssetValue(borrowToken, currentBorrow, wantToken).then(currentBorrowWithCanonical => {
+              const nextData = {
+                netMarketMakingAmount: toFixed(netMarketMakingAmount, wantTokenDecimals),
+                currentBorrow: toFixed(currentBorrow, borrowTokenDecimals),
+                currentBorrowWithCanonical: toFixed(currentBorrowWithCanonical, wantTokenDecimals),
+                estimatedTotalAssets: toFixed(estimatedTotalAssets, wantTokenDecimals),
+                totalCollateralTokenAmount: toFixed(totalCollateralTokenAmount, wantTokenDecimals),
+                wantInfo,
+                borrowInfo,
+                result: toFixed(
+                  estimatedTotalAssets.add(totalCollateralTokenAmount).sub(netMarketMakingAmount).sub(currentBorrowWithCanonical),
+                  wantTokenDecimals
+                )
+              }
+              setData(nextData)
+            })
           })
         })
         .finally(() => {
