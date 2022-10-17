@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux'
 import { IUNISWAPV3_RISK_ON_VAULT } from '@/constants'
 import { Contract } from 'ethers'
 
-const usePersonalVault = (array = []) => {
+const useTemplateVault = (array = []) => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const userProvider = useSelector(state => state.walletReducer.userProvider)
@@ -21,13 +21,10 @@ const usePersonalVault = (array = []) => {
     setLoading(true)
     Promise.all(
       map(array, async address => {
-        if (isEmpty(address)) return {}
         const contract = new Contract(address, IUNISWAPV3_RISK_ON_VAULT, userProvider)
         return {
           name: (await contract.name()) || address,
-          address,
-          token: (await contract.getStatus())._wantToken,
-          type: ''
+          address
         }
       })
     )
@@ -39,7 +36,7 @@ const usePersonalVault = (array = []) => {
           setLoading(false)
         }, 300)
       })
-  }, [array.toString(), userProvider])
+  }, [array, userProvider])
 
   useEffect(() => {
     load()
@@ -51,4 +48,4 @@ const usePersonalVault = (array = []) => {
   }
 }
 
-export default usePersonalVault
+export default useTemplateVault

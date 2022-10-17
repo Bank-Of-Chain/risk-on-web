@@ -24,7 +24,7 @@ const { Contract } = ethers
 
 const tokens = [USDC_ADDRESS, WETH_ADDRESS]
 
-const useRiskOnVault = vaultFactoryAddress => {
+const useRiskOnVault = (vaultFactoryAddress, vaultImplAddress) => {
   const provider = useSelector(state => state.walletReducer.provider)
   const userProvider = useSelector(state => state.walletReducer.userProvider)
   const navigate = useNavigate()
@@ -96,6 +96,21 @@ const useRiskOnVault = vaultFactoryAddress => {
     setAdding(false)
   }, [vaultFactoryAddress, userProvider, token, type, navigate])
 
+  const deleteVault = useCallback(async () => {
+    setAdding(true)
+    try {
+      const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+      vaultFactoryContract
+        .connect(userProvider.getSigner())
+        .createNewVault(token, type)
+        .then(tx => tx.wait())
+      message.success('Delete vault success')
+    } catch (error) {
+      message.error('Delete vault failed')
+    }
+    setAdding(false)
+  }, [vaultFactoryAddress, userProvider, token, type])
+
   const getVaultImplList = useCallback(() => {
     if (isEmpty(vaultFactoryAddress) || isEmpty(userProvider)) return
     const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
@@ -106,12 +121,24 @@ const useRiskOnVault = vaultFactoryAddress => {
     if (isEmpty(vaultFactoryAddress) || isEmpty(userProvider) || isEmpty(vaultImplList) || isEmpty(userAddress)) return
     const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
     const requestArray = map(vaultImplList, implAddress => {
-      return [vaultFactoryContract.vaultAddressMap(userAddress, implAddress, 0), vaultFactoryContract.vaultAddressMap(userAddress, implAddress, 1)]
+      if (!isEmpty(vaultImplAddress) && implAddress !== vaultImplAddress) return []
+      const array = [WETH_ADDRESS, USDC_ADDRESS]
+      return map(array, (arrayItem, index) => {
+        return vaultFactoryContract.vaultAddressMap(userAddress, implAddress, index).then(rs => {
+          if (index === 1 || rs === ZERO_ADDRESS) return { hasCreate: false, type: implAddress, token: arrayItem }
+          return {
+            address: rs,
+            type: implAddress,
+            hasCreate: true,
+            token: arrayItem
+          }
+        })
+      })
     })
     Promise.all(flatten(requestArray)).then(resp => {
       setPersonalVault(filter(resp, i => i !== ZERO_ADDRESS))
     })
-  }, [userAddress, vaultFactoryAddress, userProvider, vaultImplList])
+  }, [userAddress, vaultFactoryAddress, userProvider, vaultImplList, vaultImplAddress])
 
   const estimateAdd = useCallback(() => {
     if (isEmpty(token) || isEmpty(type) || isEmpty(userAddress)) {
@@ -145,6 +172,7 @@ const useRiskOnVault = vaultFactoryAddress => {
     // functions
     reset,
     addVault,
+    deleteVault,
     adding
   }
 }

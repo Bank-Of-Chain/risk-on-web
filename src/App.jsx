@@ -22,7 +22,8 @@ import './App.css'
 const { Header, Footer, Content } = Layout
 
 // === Pages === //
-const Home = lazy(() => import('./pages/Home/index'))
+const List = lazy(() => import('./pages/List/index'))
+const Create = lazy(() => import('./pages/Create/index'))
 const Add = lazy(() => import('./pages/Add/index'))
 const Deposit = lazy(() => import('./pages/Deposit/index'))
 const Analysis = lazy(() => import('./pages/Analysis/index'))
@@ -50,7 +51,15 @@ function App() {
               index
               element={
                 <Suspense fallback={<Loading />}>
-                  <Home />
+                  <List />
+                </Suspense>
+              }
+            />
+            <Route
+              path="create/:templateVaultId"
+              element={
+                <Suspense fallback={<Loading />}>
+                  <Create />
                 </Suspense>
               }
             />
