@@ -6,7 +6,7 @@ import { Button, Row, Col, Card, Spin, Avatar, Descriptions } from 'antd'
 import { VerticalAlignBottomOutlined, LineChartOutlined, CopyOutlined, DeleteOutlined } from '@ant-design/icons'
 
 // === Hooks === //
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import useRiskOnVault from '@/hooks/useRiskOnVault'
 import usePersonalVault from '@/hooks/usePersonalVault'
 
@@ -21,6 +21,7 @@ const { Meta } = Card
 
 const Create = () => {
   const params = useParams()
+  const navigate = useNavigate()
   const { personalVault, addVault, deleteVault } = useRiskOnVault(VAULT_FACTORY_ADDRESS, params.templateVaultId)
   const { data, loading } = usePersonalVault(map(personalVault, 'address'))
   const datas = merge(personalVault, data)
@@ -31,9 +32,9 @@ const Create = () => {
       <Col span={20} push={2}>
         <Card
           title={
-            <Link to={'/'}>
-              <div style={{ cursor: 'pointer' }}>&lt; Back</div>
-            </Link>
+            <Button type="link" onClick={() => navigate('/')}>
+              &lt; Back
+            </Button>
           }
         >
           <Spin spinning={loading}>
@@ -59,7 +60,7 @@ const Create = () => {
                                 </Button>
                               </Link>,
                               <Button type="primary" icon={<DeleteOutlined />} key="delete" onClick={deleteVault}>
-                                delete
+                                Delete
                               </Button>
                             ]
                           : [
