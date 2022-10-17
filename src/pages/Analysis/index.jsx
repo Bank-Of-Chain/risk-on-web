@@ -10,9 +10,8 @@ import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 // === Constants === //
-import { IUNISWAPV3_RISK_ON_VAULT, VAULT_FACTORY_ADDRESS, VAULT_FACTORY_ABI, IUNISWAPV3_RISK_ON_HELPER } from '@/constants'
+import { IERC20_ABI, IUNISWAPV3_RISK_ON_VAULT, VAULT_FACTORY_ADDRESS, VAULT_FACTORY_ABI, IUNISWAPV3_RISK_ON_HELPER } from '@/constants'
 import { USDC_ADDRESS, WETH_ADDRESS } from '@/constants/tokens'
-import { BN_6, BN_18 } from '@/constants/big-number'
 
 // === Utils === //
 import { Contract, BigNumber } from 'ethers'
@@ -32,6 +31,8 @@ const Analysis = () => {
   const { personalVaultId } = params
   const userAddress = provider?.selectedAddress
 
+  console.log('data===>', data)
+
   const load = useCallback(() => {
     if (isEmpty(personalVaultId) || isEmpty(userAddress)) return
     setLoading(true)
@@ -43,16 +44,35 @@ const Analysis = () => {
         contract.netMarketMakingAmount(),
         helperContract.getCurrentBorrow(USDC_ADDRESS, 2, personalVaultId),
         helperContract.getTotalCollateralTokenAmount(personalVaultId, WETH_ADDRESS),
-        contract.depositTo3rdPoolTotalAssets()
+        contract.depositTo3rdPoolTotalAssets(),
+        contract.borrowToken().then(async i => {
+          const tokenContract = new Contract(i, IERC20_ABI, userProvider)
+          return { borrowToken: i, name: await tokenContract.symbol(), borrowTokenDecimals: BigNumber.from(10).pow(await tokenContract.decimals()) }
+        }),
+        contract.wantToken().then(async i => {
+          const tokenContract = new Contract(i, IERC20_ABI, userProvider)
+          return { wantToken: i, name: await tokenContract.symbol(), wantTokenDecimals: BigNumber.from(10).pow(await tokenContract.decimals()) }
+        })
       ])
-        .then(([netMarketMakingAmount, currentBorrow, totalCollateralTokenAmount, estimatedTotalAssets]) => {
-          const nextData = {
-            netMarketMakingAmount,
-            currentBorrow,
-            estimatedTotalAssets,
-            totalCollateralTokenAmount
-          }
-          setData(nextData)
+        .then(([netMarketMakingAmount, currentBorrow, totalCollateralTokenAmount, estimatedTotalAssets, borrowInfo, wantInfo]) => {
+          const { borrowToken, borrowTokenDecimals } = borrowInfo
+          const { wantToken, wantTokenDecimals } = wantInfo
+          return helperContract.calcCanonicalAssetValue(borrowToken, currentBorrow, wantToken).then(currentBorrowWithCanonical => {
+            const nextData = {
+              netMarketMakingAmount: toFixed(netMarketMakingAmount, wantTokenDecimals),
+              currentBorrow: toFixed(currentBorrow, borrowTokenDecimals),
+              currentBorrowWithCanonical: toFixed(currentBorrowWithCanonical, wantTokenDecimals),
+              estimatedTotalAssets: toFixed(estimatedTotalAssets, wantTokenDecimals),
+              totalCollateralTokenAmount: toFixed(totalCollateralTokenAmount, wantTokenDecimals),
+              wantInfo,
+              borrowInfo,
+              result: toFixed(
+                estimatedTotalAssets.add(totalCollateralTokenAmount).sub(netMarketMakingAmount).sub(currentBorrowWithCanonical),
+                wantTokenDecimals
+              )
+            }
+            setData(nextData)
+          })
         })
         .finally(() => {
           setTimeout(() => {
@@ -87,10 +107,14 @@ const Analysis = () => {
   }
 
   const {
-    netMarketMakingAmount = BigNumber.from(0),
-    currentBorrow = BigNumber.from(0),
-    totalCollateralTokenAmount = BigNumber.from(0),
-    estimatedTotalAssets = BigNumber.from(0)
+    netMarketMakingAmount = '0',
+    currentBorrow = '0',
+    totalCollateralTokenAmount = '0',
+    estimatedTotalAssets = '0',
+    result = '0',
+    currentBorrowWithCanonical = '0',
+    wantInfo = {},
+    borrowInfo = {}
   } = data
 
   return (
@@ -105,7 +129,10 @@ const Analysis = () => {
               </Tooltip>
             }
           >
-            <p>{toFixed(netMarketMakingAmount, BN_18)}</p>
+            <p>
+              {netMarketMakingAmount}&nbsp;
+              {wantInfo.name}
+            </p>
           </Card>
         </Col>
         <Col span={8}>
@@ -117,7 +144,9 @@ const Analysis = () => {
               </Tooltip>
             }
           >
-            <p>{toFixed(currentBorrow, BN_6)}</p>
+            <p>
+              {currentBorrow}&nbsp;{borrowInfo.name}({currentBorrowWithCanonical}&nbsp;{wantInfo.name})
+            </p>
           </Card>
         </Col>
         <Col span={8}>
@@ -129,7 +158,9 @@ const Analysis = () => {
               </Tooltip>
             }
           >
-            <p>{toFixed(totalCollateralTokenAmount, BN_18)}</p>
+            <p>
+              {totalCollateralTokenAmount}&nbsp;{wantInfo.name}
+            </p>
           </Card>
         </Col>
         <Col span={8}>
@@ -141,7 +172,9 @@ const Analysis = () => {
               </Tooltip>
             }
           >
-            <p>{toFixed(estimatedTotalAssets, BN_18)}</p>
+            <p>
+              {estimatedTotalAssets}&nbsp;{wantInfo.name}
+            </p>
           </Card>
         </Col>
         <Col span={8}>
@@ -153,7 +186,9 @@ const Analysis = () => {
               </Tooltip>
             }
           >
-            <p>{toFixed(estimatedTotalAssets.add(totalCollateralTokenAmount).sub(netMarketMakingAmount).sub(currentBorrow), BN_18)}</p>
+            <p>
+              {result}&nbsp;{wantInfo.name}
+            </p>
           </Card>
         </Col>
       </Row>
