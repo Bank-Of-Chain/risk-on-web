@@ -11,11 +11,13 @@ import { useParams } from 'react-router-dom'
 
 // === Constants === //
 import { IUNISWAPV3_RISK_ON_VAULT, VAULT_FACTORY_ADDRESS, VAULT_FACTORY_ABI, IUNISWAPV3_RISK_ON_HELPER } from '@/constants'
-import { USDC_ADDRESS } from '@/constants/tokens'
+import { USDC_ADDRESS, WETH_ADDRESS } from '@/constants/tokens'
+import { BN_6, BN_18 } from '@/constants/big-number'
 
 // === Utils === //
 import { Contract, BigNumber } from 'ethers'
 import isEmpty from 'lodash/isEmpty'
+import { toFixed } from '@/helpers/number-format'
 
 // === Styles === //
 import styles from './style.module.css'
@@ -39,33 +41,19 @@ const Analysis = () => {
       const helperContract = new Contract(helperAddress, IUNISWAPV3_RISK_ON_HELPER, userProvider)
       Promise.all([
         contract.netMarketMakingAmount(),
-        contract.estimatedTotalAssets(),
-        helperContract.getCurrentBorrow(USDC_ADDRESS, personalVaultId, userAddress),
-        helperContract.borrowInfo(personalVaultId)
+        helperContract.getCurrentBorrow(USDC_ADDRESS, 2, personalVaultId),
+        helperContract.getTotalCollateralTokenAmount(personalVaultId, WETH_ADDRESS),
+        contract.depositTo3rdPoolTotalAssets()
       ])
-        .then(
-          ([
+        .then(([netMarketMakingAmount, currentBorrow, totalCollateralTokenAmount, estimatedTotalAssets]) => {
+          const nextData = {
             netMarketMakingAmount,
+            currentBorrow,
             estimatedTotalAssets,
-            getCurrentBorrow,
-            { _availableBorrowsETH, _currentLiquidationThreshold, _healthFactor, _ltv, _totalCollateralETH, _totalDebtETH },
-            ...aa
-          ]) => {
-            console.log('aa=', aa)
-            const nextData = {
-              netMarketMakingAmount,
-              getCurrentBorrow,
-              estimatedTotalAssets,
-              _availableBorrowsETH,
-              _currentLiquidationThreshold,
-              _healthFactor,
-              _ltv,
-              _totalCollateralETH,
-              _totalDebtETH
-            }
-            setData(nextData)
+            totalCollateralTokenAmount
           }
-        )
+          setData(nextData)
+        })
         .finally(() => {
           setTimeout(() => {
             setLoading(false)
@@ -80,7 +68,8 @@ const Analysis = () => {
     grid: { top: 8, right: 8, bottom: 24, left: 36 },
     xAxis: {
       type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      axisTick: { alignWithLabel: true }
     },
     yAxis: {
       type: 'value'
@@ -99,8 +88,8 @@ const Analysis = () => {
 
   const {
     netMarketMakingAmount = BigNumber.from(0),
-    getCurrentBorrow = BigNumber.from(0),
-    _totalCollateralETH = BigNumber.from(0),
+    currentBorrow = BigNumber.from(0),
+    totalCollateralTokenAmount = BigNumber.from(0),
     estimatedTotalAssets = BigNumber.from(0)
   } = data
 
@@ -116,7 +105,7 @@ const Analysis = () => {
               </Tooltip>
             }
           >
-            <p>{netMarketMakingAmount.toString()}</p>
+            <p>{toFixed(netMarketMakingAmount, BN_18)}</p>
           </Card>
         </Col>
         <Col span={8}>
@@ -128,7 +117,7 @@ const Analysis = () => {
               </Tooltip>
             }
           >
-            <p>{getCurrentBorrow.toString()}</p>
+            <p>{toFixed(currentBorrow, BN_6)}</p>
           </Card>
         </Col>
         <Col span={8}>
@@ -140,7 +129,7 @@ const Analysis = () => {
               </Tooltip>
             }
           >
-            <p>{_totalCollateralETH.toString()}</p>
+            <p>{toFixed(totalCollateralTokenAmount, BN_18)}</p>
           </Card>
         </Col>
         <Col span={8}>
@@ -152,7 +141,7 @@ const Analysis = () => {
               </Tooltip>
             }
           >
-            <p>{estimatedTotalAssets.toString()}</p>
+            <p>{toFixed(estimatedTotalAssets, BN_18)}</p>
           </Card>
         </Col>
         <Col span={8}>
@@ -164,14 +153,7 @@ const Analysis = () => {
               </Tooltip>
             }
           >
-            <p>{estimatedTotalAssets.add(_totalCollateralETH).sub(netMarketMakingAmount).sub(getCurrentBorrow).toString()}</p>
-          </Card>
-        </Col>
-      </Row>
-      <Row className={styles.chart}>
-        <Col span={24}>
-          <Card title="Tvl" extra={<InfoCircleOutlined />}>
-            <ReactECharts option={options} />
+            <p>{toFixed(estimatedTotalAssets.add(totalCollateralTokenAmount).sub(netMarketMakingAmount).sub(currentBorrow), BN_18)}</p>
           </Card>
         </Col>
       </Row>

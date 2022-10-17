@@ -266,7 +266,7 @@ export const VAULT_FACTORY_ABI = [
       },
       {
         internalType: 'address',
-        name: '_valueInterpreter',
+        name: '_treasury',
         type: 'address'
       }
     ],
@@ -441,7 +441,7 @@ export const VAULT_FACTORY_ABI = [
   },
   {
     inputs: [],
-    name: 'uniswapV3RiskOnHelper',
+    name: 'treasury',
     outputs: [
       {
         internalType: 'address',
@@ -454,7 +454,7 @@ export const VAULT_FACTORY_ABI = [
   },
   {
     inputs: [],
-    name: 'valueInterpreter',
+    name: 'uniswapV3RiskOnHelper',
     outputs: [
       {
         internalType: 'address',
@@ -540,12 +540,38 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
     inputs: [
       {
         indexed: false,
+        internalType: 'uint8',
+        name: 'version',
+        type: 'uint8'
+      }
+    ],
+    name: 'Initialized',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
         internalType: 'uint256',
         name: '_amount',
         type: 'uint256'
       }
     ],
     name: 'LendToStrategy',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_basis',
+        type: 'uint256'
+      }
+    ],
+    name: 'ProfitFeeBpsChanged',
     type: 'event'
   },
   {
@@ -608,15 +634,123 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
   },
   {
     anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_nftId',
+        type: 'uint256'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_amount0',
+        type: 'uint256'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_amount1',
+        type: 'uint256'
+      }
+    ],
+    name: 'UniV3NFTCollect',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: '_tokenId',
+        type: 'uint256'
+      },
+      {
+        indexed: false,
+        internalType: 'uint128',
+        name: '_liquidity',
+        type: 'uint128'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_amount0',
+        type: 'uint256'
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_amount1',
+        type: 'uint256'
+      }
+    ],
+    name: 'UniV3NFTPositionAdded',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: '_tokenId',
+        type: 'uint256'
+      }
+    ],
+    name: 'UniV3NFTPositionRemoved',
+    type: 'event'
+  },
+  {
+    anonymous: false,
     inputs: [],
     name: 'UniV3UpdateConfig',
     type: 'event'
   },
   {
     inputs: [],
+    name: 'accessControlProxy',
+    outputs: [
+      {
+        internalType: 'contract IAccessControlProxy',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
     name: 'borrowRebalance',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'borrowToken',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'depositTo3rdPoolTotalAssets',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_totalAssets',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -748,6 +882,19 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
   },
   {
     inputs: [],
+    name: 'getTwap',
+    outputs: [
+      {
+        internalType: 'int24',
+        name: '',
+        type: 'int24'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
     name: 'getVersion',
     outputs: [
       {
@@ -778,6 +925,19 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
     type: 'function'
   },
   {
+    inputs: [],
+    name: 'lastHarvest',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
     inputs: [
       {
         internalType: 'uint256',
@@ -792,12 +952,12 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
   },
   {
     inputs: [],
-    name: 'name',
+    name: 'manageFeeBps',
     outputs: [
       {
-        internalType: 'string',
+        internalType: 'uint256',
         name: '',
-        type: 'string'
+        type: 'uint256'
       }
     ],
     stateMutability: 'view',
@@ -806,6 +966,32 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
   {
     inputs: [],
     name: 'netMarketMakingAmount',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'pool',
+    outputs: [
+      {
+        internalType: 'contract IUniswapV3Pool',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'profitFeeBps',
     outputs: [
       {
         internalType: 'uint256',
@@ -913,6 +1099,19 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
   {
     inputs: [
       {
+        internalType: 'uint256',
+        name: '_basis',
+        type: 'uint256'
+      }
+    ],
+    name: 'setManageFeeBps',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
         internalType: 'int24',
         name: '_maxTwapDeviation',
         type: 'int24'
@@ -952,6 +1151,19 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
   {
     inputs: [
       {
+        internalType: 'uint256',
+        name: '_basis',
+        type: 'uint256'
+      }
+    ],
+    name: 'setProfitFeeBps',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
         internalType: 'uint32',
         name: '_twapDuration',
         type: 'uint32'
@@ -980,15 +1192,41 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
     ],
     stateMutability: 'view',
     type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'wantToken',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
   }
 ]
 
 export const IUNISWAPV3_RISK_ON_HELPER = [
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint8',
+        name: 'version',
+        type: 'uint8'
+      }
+    ],
+    name: 'Initialized',
+    type: 'event'
+  },
+  {
     inputs: [
       {
         internalType: 'address',
-        name: '_user',
+        name: '_account',
         type: 'address'
       }
     ],
@@ -996,17 +1234,17 @@ export const IUNISWAPV3_RISK_ON_HELPER = [
     outputs: [
       {
         internalType: 'uint256',
-        name: '_totalCollateralETH',
+        name: '_totalCollateralBase',
         type: 'uint256'
       },
       {
         internalType: 'uint256',
-        name: '_totalDebtETH',
+        name: '_totalDebtBase',
         type: 'uint256'
       },
       {
         internalType: 'uint256',
-        name: '_availableBorrowsETH',
+        name: '_availableBorrowsBase',
         type: 'uint256'
       },
       {
@@ -1022,6 +1260,35 @@ export const IUNISWAPV3_RISK_ON_HELPER = [
       {
         internalType: 'uint256',
         name: '_healthFactor',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_baseAsset',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256'
+      },
+      {
+        internalType: 'address',
+        name: '_quoteAsset',
+        type: 'address'
+      }
+    ],
+    name: 'calcCanonicalAssetValue',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
         type: 'uint256'
       }
     ],
@@ -1139,6 +1406,56 @@ export const IUNISWAPV3_RISK_ON_HELPER = [
         internalType: 'int24',
         name: '_tickUpper',
         type: 'int24'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_account',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_collateralToken',
+        type: 'address'
+      }
+    ],
+    name: 'getTotalCollateralTokenAmount',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_totalCollateralToken',
+        type: 'uint256'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_valueInterpreter',
+        type: 'address'
+      }
+    ],
+    name: 'initialize',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'valueInterpreter',
+    outputs: [
+      {
+        internalType: 'contract IValueInterpreter',
+        name: '',
+        type: 'address'
       }
     ],
     stateMutability: 'view',
