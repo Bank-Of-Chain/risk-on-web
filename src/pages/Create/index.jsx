@@ -39,7 +39,7 @@ const Create = () => {
           <Spin spinning={loading}>
             <Row gutter={[24, 24]}>
               {map(datas, (item, i) => {
-                const { name, token, address, hasCreate } = item
+                const { name, token, address, hasCreate, type } = item
                 return (
                   <Col span={12} key={i}>
                     <Card
@@ -63,7 +63,7 @@ const Create = () => {
                               </Button>
                             ]
                           : [
-                              <Button type="primary" icon={<CopyOutlined />} onClick={addVault} key="create">
+                              <Button type="primary" icon={<CopyOutlined />} onClick={() => addVault(token, type)} key="create">
                                 Create
                               </Button>
                             ]

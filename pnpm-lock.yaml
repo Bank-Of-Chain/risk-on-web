@@ -17,6 +17,7 @@ specifiers:
   babel-plugin-import: ^1.13.5
   bignumber.js: ^9.1.0
   classnames: ^2.3.2
+  copy-to-clipboard: ^3.3.2
   customize-cra: ^1.0.0
   echarts: ^3.0.0 || ^4.0.0 || ^5.0.0
   echarts-for-react: ^3.0.2
@@ -56,6 +57,7 @@ dependencies:
   antd: 4.23.4_biqbaboplfbrettd7655fr4n2y
   bignumber.js: 9.1.0
   classnames: 2.3.2
+  copy-to-clipboard: 3.3.2
   echarts: 5.4.0
   echarts-for-react: 3.0.2_echarts@5.4.0+react@18.2.0
   eslint: 8.25.0

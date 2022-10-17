@@ -74,27 +74,30 @@ const useRiskOnVault = (vaultFactoryAddress, vaultImplAddress) => {
     </Spin>
   )
 
-  const addVault = useCallback(async () => {
-    setAdding(true)
-    try {
-      const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
-      const tx = await vaultFactoryContract.connect(userProvider.getSigner()).createNewVault(token, type)
-      const { events } = await tx.wait()
-      let args = []
-      for (let i = events.length - 1; i >= 0; i--) {
-        if (events[i].event === 'CreateNewVault') {
-          args = events[i].args
-          break
+  const addVault = useCallback(
+    async (token, type) => {
+      setAdding(true)
+      try {
+        const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+        const tx = await vaultFactoryContract.connect(userProvider.getSigner()).createNewVault(token, type)
+        const { events } = await tx.wait()
+        let args = []
+        for (let i = events.length - 1; i >= 0; i--) {
+          if (events[i].event === 'CreateNewVault') {
+            args = events[i].args
+            break
+          }
         }
+        const { _newVault } = args
+        message.success('Add vault success')
+        navigate(`/deposit/${_newVault}`)
+      } catch (error) {
+        message.error('Add vault failed')
       }
-      const { _newVault } = args
-      message.success('Add vault success')
-      navigate(`/deposit/${_newVault}`)
-    } catch (error) {
-      message.error('Add vault failed')
-    }
-    setAdding(false)
-  }, [vaultFactoryAddress, userProvider, token, type, navigate])
+      setAdding(false)
+    },
+    [vaultFactoryAddress, userProvider, navigate]
+  )
 
   const deleteVault = useCallback(async () => {
     setAdding(true)
@@ -125,7 +128,7 @@ const useRiskOnVault = (vaultFactoryAddress, vaultImplAddress) => {
       const array = [WETH_ADDRESS, USDC_ADDRESS]
       return map(array, (arrayItem, index) => {
         return vaultFactoryContract.vaultAddressMap(userAddress, implAddress, index).then(rs => {
-          if (index === 1 || rs === ZERO_ADDRESS) return { hasCreate: false, type: implAddress, token: arrayItem }
+          if (rs === ZERO_ADDRESS) return { hasCreate: false, type: implAddress, token: arrayItem }
           return {
             address: rs,
             type: implAddress,

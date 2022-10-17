@@ -23,8 +23,12 @@ const usePersonalVault = (array = []) => {
       map(array, async address => {
         if (isEmpty(address)) return {}
         const contract = new Contract(address, IUNISWAPV3_RISK_ON_VAULT, userProvider)
+        let name = address
+        try {
+          name = await contract.name()
+        } catch (error) {}
         return {
-          name: (await contract.name()) || address,
+          name,
           address,
           token: (await contract.getStatus())._wantToken,
           type: ''

@@ -22,8 +22,12 @@ const useTemplateVault = (array = []) => {
     Promise.all(
       map(array, async address => {
         const contract = new Contract(address, IUNISWAPV3_RISK_ON_VAULT, userProvider)
+        let name = address
+        try {
+          name = await contract.name()
+        } catch (error) {}
         return {
-          name: (await contract.name()) || address,
+          name,
           address
         }
       })

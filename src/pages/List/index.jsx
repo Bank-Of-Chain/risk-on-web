@@ -2,7 +2,7 @@ import React from 'react'
 
 // === Components === //
 import { Link } from 'react-router-dom'
-import { Row, Col, Card, List, Space, Spin } from 'antd'
+import { Row, Col, Card, List, Space, Spin, message } from 'antd'
 import { CopyOutlined } from '@ant-design/icons'
 
 // === Hooks === //
@@ -12,6 +12,7 @@ import useTemplateVault from '@/hooks/useTemplateVault'
 // === Utils === //
 import filter from 'lodash/filter'
 import size from 'lodash/size'
+import copy from 'copy-to-clipboard'
 
 // === Constants === //
 import { VAULT_FACTORY_ADDRESS } from '@/constants'
@@ -23,7 +24,8 @@ const ListComponent = () => {
   const { data, loading } = useTemplateVault(vaultImplList)
 
   const copyAddress = text => {
-    //TODO:
+    copy(text)
+    message.success('Copied')
   }
 
   return (
@@ -42,7 +44,9 @@ const ListComponent = () => {
                     return (
                       <List.Item
                         actions={[
-                          <Link to={`/create/${address}`}>Create New Vaults&nbsp;({size(filter(personalVault, i => i.type === address))})</Link>
+                          <Link to={`/create/${address}`}>
+                            Create New Vaults&nbsp;({size(filter(personalVault, i => i.type === address && i.hasCreate === true))})
+                          </Link>
                         ]}
                       >
                         <List.Item.Meta
