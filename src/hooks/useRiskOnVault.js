@@ -125,8 +125,7 @@ const useRiskOnVault = (vaultFactoryAddress, vaultImplAddress) => {
     const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
     const requestArray = map(vaultImplList, implAddress => {
       if (!isEmpty(vaultImplAddress) && implAddress !== vaultImplAddress) return []
-      const array = [WETH_ADDRESS, USDC_ADDRESS]
-      return map(array, (arrayItem, index) => {
+      return map(tokens, (arrayItem, index) => {
         return vaultFactoryContract.vaultAddressMap(userAddress, implAddress, index).then(rs => {
           if (rs === ZERO_ADDRESS) return { hasCreate: false, type: implAddress, token: arrayItem }
           return {

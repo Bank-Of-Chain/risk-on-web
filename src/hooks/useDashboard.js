@@ -15,7 +15,7 @@ const array = [
   { date: '2022-10-14', blockTag: 30246716 },
   { date: '2022-10-15', blockTag: 30276716 },
   { date: '2022-10-16', blockTag: 30306716 },
-  { date: '2022-10-17', blockTag: 30336716 }
+  { date: '2022-10-17', blockTag: 30336751 }
 ]
 
 const useDashboard = personalVaultId => {

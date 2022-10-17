@@ -187,6 +187,19 @@ const Analysis = () => {
               </p>
             </Card>
           </Col>
+          <Col span={8}>
+            <Card
+              loading={loading}
+              title="IRR"
+              extra={
+                <Tooltip title="">
+                  <InfoCircleOutlined />
+                </Tooltip>
+              }
+            >
+              <p>7.62%</p>
+            </Card>
+          </Col>
         </Row>
         <Row className={styles.chart}>
           <Col span={24}>

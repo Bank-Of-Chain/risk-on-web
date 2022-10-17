@@ -925,6 +925,39 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
     type: 'function'
   },
   {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_owner',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_wantToken',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_uniswapV3RiskOnHelper',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_treasury',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_accessControlProxy',
+        type: 'address'
+      }
+    ],
+    name: 'initialize',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
     inputs: [],
     name: 'lastHarvest',
     outputs: [
@@ -961,6 +994,19 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
       }
     ],
     stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'name',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string'
+      }
+    ],
+    stateMutability: 'pure',
     type: 'function'
   },
   {
@@ -1191,6 +1237,32 @@ export const IUNISWAPV3_RISK_ON_VAULT = [
       }
     ],
     stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'token0',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'pure',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'token1',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'pure',
     type: 'function'
   },
   {

@@ -12,12 +12,16 @@ import useTemplateVault from '@/hooks/useTemplateVault'
 // === Utils === //
 import filter from 'lodash/filter'
 import size from 'lodash/size'
+import { map } from 'lodash'
 import copy from 'copy-to-clipboard'
 
 // === Constants === //
 import { VAULT_FACTORY_ADDRESS } from '@/constants'
+import { USDC_ADDRESS, WETH_ADDRESS } from '@/constants/tokens'
 
 import styles from './style.module.css'
+
+const tokens = [USDC_ADDRESS, WETH_ADDRESS]
 
 const ListComponent = () => {
   const { vaultImplList, personalVault } = useRiskOnVault(VAULT_FACTORY_ADDRESS)
@@ -40,7 +44,7 @@ const ListComponent = () => {
                   bordered
                   dataSource={data}
                   renderItem={item => {
-                    const { address, name, token } = item
+                    const { address, name } = item
                     return (
                       <List.Item
                         actions={[
@@ -50,17 +54,19 @@ const ListComponent = () => {
                         ]}
                       >
                         <List.Item.Meta
-                          avatar={
+                          avatar={map(tokens, (i, index) => (
                             <img
-                              alt={token}
+                              key={i}
+                              alt={i}
                               className={styles.logo}
-                              src={`https://bankofchain.io/images/${token}.png`}
+                              style={{ marginLeft: `-${index * 20}%` }}
+                              src={`https://bankofchain.io/images/${i}.png`}
                               onError={({ currentTarget }) => {
                                 currentTarget.onerror = null // prevents looping
                                 currentTarget.src = 'https://bankofchain.io/default.png'
                               }}
                             />
-                          }
+                          ))}
                           title={<span>{name}</span>}
                           description={
                             <Space>
