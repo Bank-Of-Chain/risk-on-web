@@ -11,7 +11,6 @@ import { useParams } from 'react-router-dom'
 
 // === Constants === //
 import { IERC20_ABI, IUNISWAPV3_RISK_ON_VAULT, VAULT_FACTORY_ADDRESS, VAULT_FACTORY_ABI, IUNISWAPV3_RISK_ON_HELPER } from '@/constants'
-import { USDC_ADDRESS, WETH_ADDRESS } from '@/constants/tokens'
 
 // === Utils === //
 import { Contract, BigNumber } from 'ethers'
