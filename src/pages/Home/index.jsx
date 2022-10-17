@@ -1,8 +1,9 @@
 import React from 'react'
+import copy from 'copy-to-clipboard'
 
 // === Components === //
 import { Link } from 'react-router-dom'
-import { Button, Row, Col, Card, List, Space, Spin, Typography } from 'antd'
+import { Button, Row, Col, Card, List, Space, Spin, Typography, message } from 'antd'
 import { CopyOutlined } from '@ant-design/icons'
 
 import styles from './style.module.css'
@@ -23,7 +24,8 @@ const Home = () => {
   const userAddress = provider?.selectedAddress
 
   const copyAddress = text => {
-    //TODO:
+    copy(text)
+    message.success('Copied')
   }
 
   return (
