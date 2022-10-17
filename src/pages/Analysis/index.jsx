@@ -8,6 +8,7 @@ import { Row, Col, Card, Tooltip, Spin, Button } from 'antd'
 // === Hooks === //
 import { useSelector } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
+import useDashboard from '@/hooks/useDashboard'
 
 // === Constants === //
 import { IERC20_ABI, IUNISWAPV3_RISK_ON_VAULT, VAULT_FACTORY_ADDRESS, VAULT_FACTORY_ABI, IUNISWAPV3_RISK_ON_HELPER } from '@/constants'
@@ -15,6 +16,7 @@ import { IERC20_ABI, IUNISWAPV3_RISK_ON_VAULT, VAULT_FACTORY_ADDRESS, VAULT_FACT
 // === Utils === //
 import { Contract, BigNumber } from 'ethers'
 import isEmpty from 'lodash/isEmpty'
+import map from 'lodash/map'
 import { toFixed } from '@/helpers/number-format'
 
 // === Styles === //
@@ -22,16 +24,17 @@ import styles from './style.module.css'
 
 const Analysis = () => {
   const params = useParams()
+  const { personalVaultId } = params
+
   const navigate = useNavigate()
+  const { data: dataArray, loading: dataLoading } = useDashboard(personalVaultId)
   const userProvider = useSelector(state => state.walletReducer.userProvider)
   const provider = useSelector(state => state.walletReducer.provider)
   const [data, setData] = useState({})
   const [loading, setLoading] = useState(false)
 
-  const { personalVaultId } = params
+  console.log('dataArray=', dataArray)
   const userAddress = provider?.selectedAddress
-
-  console.log('data===>', data)
 
   const load = useCallback(() => {
     if (isEmpty(personalVaultId) || isEmpty(userAddress)) return
@@ -87,28 +90,6 @@ const Analysis = () => {
 
   useEffect(load, [load])
 
-  const options = {
-    grid: { top: 8, right: 8, bottom: 24, left: 36 },
-    xAxis: {
-      type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      axisTick: { alignWithLabel: true }
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [
-      {
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
-        type: 'line',
-        smooth: true
-      }
-    ],
-    tooltip: {
-      trigger: 'axis'
-    }
-  }
-
   const {
     netMarketMakingAmount = '0',
     currentBorrow = '0',
@@ -132,6 +113,7 @@ const Analysis = () => {
         <Row gutter={[24, 24]}>
           <Col span={8}>
             <Card
+              loading={loading}
               title="净做市资金"
               extra={
                 <Tooltip title="净做市资金 = 累计投入资金 - 已提取资金（A资产）">
@@ -147,6 +129,7 @@ const Analysis = () => {
           </Col>
           <Col span={8}>
             <Card
+              loading={loading}
               title="AAVE未偿还借贷本息"
               extra={
                 <Tooltip title="B资产">
@@ -161,6 +144,7 @@ const Analysis = () => {
           </Col>
           <Col span={8}>
             <Card
+              loading={loading}
               title="AAVE抵押资金"
               extra={
                 <Tooltip title="A资产">
@@ -175,6 +159,7 @@ const Analysis = () => {
           </Col>
           <Col span={8}>
             <Card
+              loading={loading}
               title="Uniswap LP Token净值"
               extra={
                 <Tooltip title="以A资产计价">
@@ -189,6 +174,7 @@ const Analysis = () => {
           </Col>
           <Col span={8}>
             <Card
+              loading={loading}
               title="做市利润"
               extra={
                 <Tooltip title="(Uniswap LP Token净值 + AAVE抵押资金)-(AAVE未偿还借贷本息 + 净做市资金)">
@@ -204,8 +190,186 @@ const Analysis = () => {
         </Row>
         <Row className={styles.chart}>
           <Col span={24}>
-            <Card title="IRR" extra={<InfoCircleOutlined />}>
-              <ReactECharts option={options} />
+            <Card
+              loading={dataLoading}
+              title="AAVE Outstanding Loan"
+              extra={
+                <Tooltip title="AAVE未偿还借贷本息">
+                  <InfoCircleOutlined />
+                </Tooltip>
+              }
+            >
+              <ReactECharts
+                option={{
+                  grid: { top: 8, right: 8, bottom: 24, left: 60 },
+                  xAxis: {
+                    type: 'category',
+                    data: map(dataArray, 'date'),
+                    axisTick: { alignWithLabel: true }
+                  },
+                  yAxis: {
+                    type: 'value'
+                  },
+                  series: [
+                    {
+                      data: map(dataArray, i => toFixed(i.netMarketMakingAmount, borrowInfo?.borrowTokenDecimals)),
+                      type: 'line',
+                      smooth: true
+                    }
+                  ],
+                  tooltip: {
+                    trigger: 'axis'
+                  }
+                }}
+              />
+            </Card>
+          </Col>
+        </Row>
+        <Row className={styles.chart}>
+          <Col span={24}>
+            <Card
+              loading={dataLoading}
+              title="Collateral"
+              extra={
+                <Tooltip title="AAVE抵押价值">
+                  <InfoCircleOutlined />
+                </Tooltip>
+              }
+            >
+              <ReactECharts
+                option={{
+                  grid: { top: 8, right: 8, bottom: 24, left: 60 },
+                  xAxis: {
+                    type: 'category',
+                    data: map(dataArray, 'date'),
+                    axisTick: { alignWithLabel: true }
+                  },
+                  yAxis: {
+                    type: 'value'
+                  },
+                  series: [
+                    {
+                      data: map(dataArray, i => toFixed(i.currentBorrow, wantInfo?.wantTokenDecimals)),
+                      type: 'line',
+                      smooth: true
+                    }
+                  ],
+                  tooltip: {
+                    trigger: 'axis'
+                  }
+                }}
+              />
+            </Card>
+          </Col>
+        </Row>
+        <Row className={styles.chart}>
+          <Col span={24}>
+            <Card
+              loading={dataLoading}
+              title="Health Ratio"
+              extra={
+                <Tooltip title="Outstanding Loan/Collateral">
+                  <InfoCircleOutlined />
+                </Tooltip>
+              }
+            >
+              <ReactECharts
+                option={{
+                  grid: { top: 8, right: 8, bottom: 24, left: 60 },
+                  xAxis: {
+                    type: 'category',
+                    data: map(dataArray, 'date'),
+                    axisTick: { alignWithLabel: true }
+                  },
+                  yAxis: {
+                    type: 'value'
+                  },
+                  series: [
+                    {
+                      data: map(dataArray, i => toFixed(i?.netMarketMakingAmount?.div(i.currentBorrow), borrowInfo?.borrowTokenDecimals)),
+                      type: 'line',
+                      smooth: true
+                    }
+                  ],
+                  tooltip: {
+                    trigger: 'axis'
+                  }
+                }}
+              />
+            </Card>
+          </Col>
+        </Row>
+        <Row className={styles.chart}>
+          <Col span={24}>
+            <Card
+              loading={dataLoading}
+              title="Uniswap Position Value"
+              extra={
+                <Tooltip title="Uniswap LP Token净值">
+                  <InfoCircleOutlined />
+                </Tooltip>
+              }
+            >
+              <ReactECharts
+                option={{
+                  grid: { top: 8, right: 8, bottom: 24, left: 60 },
+                  xAxis: {
+                    type: 'category',
+                    data: map(dataArray, 'date'),
+                    axisTick: { alignWithLabel: true }
+                  },
+                  yAxis: {
+                    type: 'value'
+                  },
+                  series: [
+                    {
+                      data: map(dataArray, i => toFixed(i.depositTo3rdPoolTotalAssets, wantInfo?.wantTokenDecimals)),
+                      type: 'line',
+                      smooth: true
+                    }
+                  ],
+                  tooltip: {
+                    trigger: 'axis'
+                  }
+                }}
+              />
+            </Card>
+          </Col>
+        </Row>
+        <Row className={styles.chart}>
+          <Col span={24}>
+            <Card
+              loading={dataLoading}
+              title="Unrealized Profit"
+              extra={
+                <Tooltip title="Uniswap Position Value+AAVE Collateral-Net Deposit-AAVE Outstanding Loan">
+                  <InfoCircleOutlined />
+                </Tooltip>
+              }
+            >
+              <ReactECharts
+                option={{
+                  grid: { top: 8, right: 8, bottom: 24, left: 60 },
+                  xAxis: {
+                    type: 'category',
+                    data: map(dataArray, 'date'),
+                    axisTick: { alignWithLabel: true }
+                  },
+                  yAxis: {
+                    type: 'value'
+                  },
+                  series: [
+                    {
+                      data: map(dataArray, i => toFixed(i.estimatedTotalAssets, borrowInfo?.borrowTokenDecimals)),
+                      type: 'line',
+                      smooth: true
+                    }
+                  ],
+                  tooltip: {
+                    trigger: 'axis'
+                  }
+                }}
+              />
             </Card>
           </Col>
         </Row>
