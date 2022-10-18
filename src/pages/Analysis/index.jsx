@@ -299,7 +299,10 @@ const Analysis = () => {
                   },
                   series: [
                     {
-                      data: map(dataArray, i => toFixed(i?.netMarketMakingAmount?.div(i.currentBorrow), borrowInfo?.borrowTokenDecimals)),
+                      data: map(dataArray, i => {
+                        if (i?.currentBorrow?.toString() === '0') return 0
+                        return toFixed(i?.netMarketMakingAmount?.div(i.currentBorrow), borrowInfo?.borrowTokenDecimals)
+                      }),
                       type: 'line',
                       smooth: true
                     }

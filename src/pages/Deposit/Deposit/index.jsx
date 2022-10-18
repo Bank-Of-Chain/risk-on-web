@@ -33,7 +33,7 @@ const Deposit = () => {
   const [tokenName, setTokenName] = useState('')
   const [estimatedTotalAssets, setEstimatedTotalAssets] = useState('')
   const [balance, setBalance] = useState('')
-  const [allowance, setAllowance] = useState('')
+  const [, setAllowance] = useState('')
   const [value, setValue] = useState('')
   const [depositing, setDepositing] = useState(false)
 
@@ -174,7 +174,7 @@ const Deposit = () => {
             onChange={e => onValueChange(e.target.value)}
           />
           <div className={styles.asset}>
-            estimatedTotalAssets: {toFixed(estimatedTotalAssets, decimal)} {tokenName}
+            TotalAssets: {toFixed(estimatedTotalAssets, decimal)} {tokenName}
           </div>
           {/* <div>Allowance: {toFixed(allowance, decimal)}</div> */}
         </Col>

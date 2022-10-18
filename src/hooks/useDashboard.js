@@ -12,10 +12,10 @@ import { useSelector } from 'react-redux'
 import { IUNISWAPV3_RISK_ON_VAULT, IUNISWAPV3_RISK_ON_HELPER, VAULT_FACTORY_ADDRESS, VAULT_FACTORY_ABI, IERC20_ABI } from '@/constants'
 
 const array = [
-  { date: '2022-10-14', blockTag: 30246716 },
-  { date: '2022-10-15', blockTag: 30276716 },
-  { date: '2022-10-16', blockTag: 30306716 },
-  { date: '2022-10-17', blockTag: 30336751 }
+  { date: '2022-10-14', blockTag: 30160291 },
+  { date: '2022-10-15', blockTag: 30190291 },
+  { date: '2022-10-16', blockTag: 30220291 },
+  { date: '2022-10-17', blockTag: 30250310 }
 ]
 
 const useDashboard = personalVaultId => {
@@ -50,7 +50,11 @@ const useDashboard = personalVaultId => {
               helperContract.getCurrentBorrow(borrowToken, 2, personalVaultId, { blockTag }).catch(() => null),
               helperContract.getTotalCollateralTokenAmount(personalVaultId, wantToken, { blockTag }).catch(() => null),
               contract.depositTo3rdPoolTotalAssets({ blockTag }).catch(() => null),
-              contract.estimatedTotalAssets({ blockTag }).catch(() => null)
+              contract.estimatedTotalAssets({ blockTag }).catch(() => null),
+              helperContract
+                .getCurrentBorrow(borrowToken, 2, personalVaultId, { blockTag })
+                .catch(() => BigNumber.from(0))
+                .then(currentBorrow => helperContract.calcCanonicalAssetValue(borrowToken, currentBorrow, wantToken))
             ])
           })
         )
@@ -63,7 +67,8 @@ const useDashboard = personalVaultId => {
                 currentBorrow: resp[index][2],
                 totalCollateralTokenAmount: resp[index][3],
                 depositTo3rdPoolTotalAssets: resp[index][4],
-                estimatedTotalAssets: resp[index][5]
+                estimatedTotalAssets: resp[index][5],
+                currentBorrowWithCanonical: resp[index][6]
               }
             })
 

@@ -17,12 +17,11 @@ import { VAULT_FACTORY_ABI } from '@/constants'
 import map from 'lodash/map'
 import isEmpty from 'lodash/isEmpty'
 import flatten from 'lodash/flatten'
-import { filter } from 'lodash'
 
 const { Option } = Select
 const { Contract } = ethers
 
-const tokens = [USDC_ADDRESS, WETH_ADDRESS]
+const tokens = [WETH_ADDRESS, USDC_ADDRESS]
 
 const useRiskOnVault = (vaultFactoryAddress, vaultImplAddress) => {
   const provider = useSelector(state => state.walletReducer.provider)
@@ -79,6 +78,7 @@ const useRiskOnVault = (vaultFactoryAddress, vaultImplAddress) => {
       setAdding(true)
       try {
         const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+        console.log('token, type=', token, type)
         const tx = await vaultFactoryContract.connect(userProvider.getSigner()).createNewVault(token, type)
         const { events } = await tx.wait()
         let args = []
@@ -99,21 +99,6 @@ const useRiskOnVault = (vaultFactoryAddress, vaultImplAddress) => {
     [vaultFactoryAddress, userProvider, navigate]
   )
 
-  const deleteVault = useCallback(async () => {
-    setAdding(true)
-    try {
-      const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
-      vaultFactoryContract
-        .connect(userProvider.getSigner())
-        .createNewVault(token, type)
-        .then(tx => tx.wait())
-      message.success('Delete vault success')
-    } catch (error) {
-      message.error('Delete vault failed')
-    }
-    setAdding(false)
-  }, [vaultFactoryAddress, userProvider, token, type])
-
   const getVaultImplList = useCallback(() => {
     if (isEmpty(vaultFactoryAddress) || isEmpty(userProvider)) return
     const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
@@ -125,22 +110,46 @@ const useRiskOnVault = (vaultFactoryAddress, vaultImplAddress) => {
     const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
     const requestArray = map(vaultImplList, implAddress => {
       if (!isEmpty(vaultImplAddress) && implAddress !== vaultImplAddress) return []
-      return map(tokens, (arrayItem, index) => {
-        return vaultFactoryContract.vaultAddressMap(userAddress, implAddress, index).then(rs => {
-          if (rs === ZERO_ADDRESS) return { hasCreate: false, type: implAddress, token: arrayItem }
-          return {
-            address: rs,
-            type: implAddress,
-            hasCreate: true,
-            token: arrayItem
-          }
+      return Promise.all(
+        map(tokens, (arrayItem, index) => {
+          return vaultFactoryContract.vaultAddressMap(userAddress, implAddress, index).then(rs => {
+            if (rs === ZERO_ADDRESS) return { hasCreate: false, type: implAddress, token: arrayItem }
+            return {
+              address: rs,
+              type: implAddress,
+              hasCreate: true,
+              token: arrayItem
+            }
+          })
         })
-      })
+      )
     })
-    Promise.all(flatten(requestArray)).then(resp => {
-      setPersonalVault(filter(resp, i => i !== ZERO_ADDRESS))
+    Promise.all(requestArray).then(resp => {
+      setPersonalVault(flatten(resp))
     })
   }, [userAddress, vaultFactoryAddress, userProvider, vaultImplList, vaultImplAddress])
+
+  const deleteVault = useCallback(
+    async (type, index) => {
+      setAdding(true)
+      const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+      vaultFactoryContract
+        .connect(userProvider.getSigner())
+        .deleteVaultAddressMapForDebug(userAddress, type, index)
+        .then(tx => tx.wait())
+        .then(() => {
+          message.success('Delete vault success')
+        })
+        .then(getVaultImplListByUser)
+        .catch(() => {
+          message.error('Delete vault failed')
+        })
+        .finally(() => {
+          setAdding(false)
+        })
+    },
+    [vaultFactoryAddress, getVaultImplListByUser, userAddress, userProvider]
+  )
 
   const estimateAdd = useCallback(() => {
     if (isEmpty(token) || isEmpty(type) || isEmpty(userAddress)) {

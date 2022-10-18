@@ -244,35 +244,9 @@ export const IERC20_ABI = [
   }
 ]
 
-export const VAULT_FACTORY_ADDRESS = '0xcd34D0833406Bff8073e18AAFa3DC34EE48Df9BA'
+export const VAULT_FACTORY_ADDRESS = '0x4054765d35be9b4b27C4A1db3B269ae40f0541Ad'
 
 export const VAULT_FACTORY_ABI = [
-  {
-    inputs: [
-      {
-        internalType: 'address[]',
-        name: '_vaultImplList',
-        type: 'address[]'
-      },
-      {
-        internalType: 'address',
-        name: '_accessControlProxy',
-        type: 'address'
-      },
-      {
-        internalType: 'address',
-        name: '_uniswapV3RiskOnHelper',
-        type: 'address'
-      },
-      {
-        internalType: 'address',
-        name: '_treasury',
-        type: 'address'
-      }
-    ],
-    stateMutability: 'nonpayable',
-    type: 'constructor'
-  },
   {
     anonymous: false,
     inputs: [
@@ -312,30 +286,8 @@ export const VAULT_FACTORY_ABI = [
     type: 'event'
   },
   {
-    inputs: [],
-    name: 'USDC_ADDRESS',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address'
-      }
-    ],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'WETH_ADDRESS',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address'
-      }
-    ],
-    stateMutability: 'view',
-    type: 'function'
+    stateMutability: 'payable',
+    type: 'fallback'
   },
   {
     inputs: [],
@@ -382,6 +334,48 @@ export const VAULT_FACTORY_ABI = [
     type: 'function'
   },
   {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_user',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_vaultImpl',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: '_index',
+        type: 'uint256'
+      }
+    ],
+    name: 'deleteVaultAddressMapForDebug',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_index',
+        type: 'uint256'
+      }
+    ],
+    name: 'getStablecoinInvestorByIndex',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
     inputs: [],
     name: 'getTotalVaultAddrList',
     outputs: [
@@ -389,6 +383,42 @@ export const VAULT_FACTORY_ABI = [
         internalType: 'contract IUniswapV3RiskOnVaultInitialize[]',
         name: '',
         type: 'address[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getTwoInvestorlist',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: '_wethInvestorSet',
+        type: 'address[]'
+      },
+      {
+        internalType: 'address[]',
+        name: '_usdInvestorSet',
+        type: 'address[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'getTwoInvestorlistLen',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '_wethInvestorSetLen',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: '_stablecoinInvestorSetLen',
+        type: 'uint256'
       }
     ],
     stateMutability: 'view',
@@ -418,6 +448,53 @@ export const VAULT_FACTORY_ABI = [
       }
     ],
     stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_index',
+        type: 'uint256'
+      }
+    ],
+    name: 'getWethInvestorByIndex',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: '_vaultImplList',
+        type: 'address[]'
+      },
+      {
+        internalType: 'address',
+        name: '_accessControlProxy',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_uniswapV3RiskOnHelper',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_treasury',
+        type: 'address'
+      }
+    ],
+    name: 'initialize',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function'
   },
   {
@@ -531,9 +608,12 @@ export const VAULT_FACTORY_ABI = [
     ],
     stateMutability: 'view',
     type: 'function'
+  },
+  {
+    stateMutability: 'payable',
+    type: 'receive'
   }
 ]
-
 export const IUNISWAPV3_RISK_ON_VAULT = [
   {
     anonymous: false,

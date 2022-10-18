@@ -1,14 +1,14 @@
 import React from 'react'
 
 // === Components === //
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Button, Row, Col, Card, Spin, Avatar, Descriptions } from 'antd'
 import { VerticalAlignBottomOutlined, LineChartOutlined, CopyOutlined, DeleteOutlined } from '@ant-design/icons'
 
 // === Hooks === //
 import { useParams, useNavigate } from 'react-router-dom'
 import useRiskOnVault from '@/hooks/useRiskOnVault'
-import usePersonalVault from '@/hooks/usePersonalVault'
+import useNameHooks from '@/hooks/useNameHooks'
 
 // === Utils === //
 import map from 'lodash/map'
@@ -22,10 +22,10 @@ const { Meta } = Card
 const Create = () => {
   const params = useParams()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { personalVault, addVault, deleteVault } = useRiskOnVault(VAULT_FACTORY_ADDRESS, params.templateVaultId)
-  const { data, loading } = usePersonalVault(map(personalVault, 'address'))
+  const { data, loading } = useNameHooks(map(personalVault, 'address'))
   const datas = merge(personalVault, data)
-  console.log('params=', personalVault, data, datas)
 
   return (
     <Row>
@@ -48,21 +48,34 @@ const Create = () => {
                       cover={<img alt="example" src={`https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png`} />}
                       actions={
                         hasCreate
-                          ? [
-                              <Link to={`/deposit/${address}`} key="deposit">
-                                <Button type="primary" icon={<VerticalAlignBottomOutlined />}>
-                                  Deposit
+                          ? searchParams.get('hasDelete') === 'true'
+                            ? [
+                                <Link to={`/deposit/${address}`} key="deposit">
+                                  <Button type="primary" icon={<VerticalAlignBottomOutlined />}>
+                                    Deposit
+                                  </Button>
+                                </Link>,
+                                <Link to={`/analysis/${address}`} key="analysis">
+                                  <Button type="primary" icon={<LineChartOutlined />}>
+                                    Analysis
+                                  </Button>
+                                </Link>,
+                                <Button type="primary" icon={<DeleteOutlined />} key="delete" onClick={() => deleteVault(type, i)}>
+                                  Delete
                                 </Button>
-                              </Link>,
-                              <Link to={`/analysis/${address}`} key="analysis">
-                                <Button type="primary" icon={<LineChartOutlined />}>
-                                  Analysis
-                                </Button>
-                              </Link>,
-                              <Button type="primary" icon={<DeleteOutlined />} key="delete" onClick={deleteVault}>
-                                Delete
-                              </Button>
-                            ]
+                              ]
+                            : [
+                                <Link to={`/deposit/${address}`} key="deposit">
+                                  <Button type="primary" icon={<VerticalAlignBottomOutlined />}>
+                                    Deposit
+                                  </Button>
+                                </Link>,
+                                <Link to={`/analysis/${address}`} key="analysis">
+                                  <Button type="primary" icon={<LineChartOutlined />}>
+                                    Analysis
+                                  </Button>
+                                </Link>
+                              ]
                           : [
                               <Button type="primary" icon={<CopyOutlined />} onClick={() => addVault(token, type)} key="create">
                                 Create
@@ -72,10 +85,10 @@ const Create = () => {
                     >
                       <Meta
                         avatar={<Avatar src={`https://bankofchain.io/images/${token}.png`} />}
-                        title={hasCreate ? name : <span>null</span>}
+                        title={hasCreate ? name : <span>&lt;null&gt;</span>}
                         description={
                           <Descriptions column={1}>
-                            <Descriptions.Item label="Address">{hasCreate ? address : <span>null</span>}</Descriptions.Item>
+                            <Descriptions.Item label="Address">{hasCreate ? address : <span>&lt;null&gt;</span>}</Descriptions.Item>
                           </Descriptions>
                         }
                       />

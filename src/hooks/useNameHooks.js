@@ -23,6 +23,11 @@ const useNameHooks = (array = []) => {
     setLoading(true)
     Promise.all(
       map(array, async address => {
+        if (isEmpty(address))
+          return {
+            name: address,
+            address
+          }
         const contract = new Contract(address, IERC20_ABI, userProvider)
         return {
           name: (await contract.name()) || address,
@@ -38,7 +43,8 @@ const useNameHooks = (array = []) => {
           setLoading(false)
         }, 300)
       })
-  }, [array, userProvider, userAddress])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [array.toString(), userProvider, userAddress])
 
   useEffect(() => {
     load()
