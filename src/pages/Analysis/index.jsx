@@ -33,7 +33,6 @@ const Analysis = () => {
   const [data, setData] = useState({})
   const [loading, setLoading] = useState(false)
 
-  console.log('dataArray=', dataArray)
   const userAddress = provider?.selectedAddress
 
   const load = useCallback(() => {
@@ -225,7 +224,7 @@ const Analysis = () => {
                   },
                   series: [
                     {
-                      data: map(dataArray, i => toFixed(i.netMarketMakingAmount, borrowInfo?.borrowTokenDecimals)),
+                      data: map(dataArray, i => toFixed(i.netMarketMakingAmount, wantInfo?.wantTokenDecimals)),
                       type: 'line',
                       smooth: true
                     }
@@ -262,7 +261,7 @@ const Analysis = () => {
                   },
                   series: [
                     {
-                      data: map(dataArray, i => toFixed(i.currentBorrow, wantInfo?.wantTokenDecimals)),
+                      data: map(dataArray, i => toFixed(i.currentBorrow, borrowInfo?.borrowTokenDecimals)),
                       type: 'line',
                       smooth: true
                     }
@@ -300,8 +299,9 @@ const Analysis = () => {
                   series: [
                     {
                       data: map(dataArray, i => {
-                        if (i?.currentBorrow?.toString() === '0') return 0
-                        return toFixed(i?.netMarketMakingAmount?.div(i.currentBorrow), borrowInfo?.borrowTokenDecimals)
+                        if (i?.currentBorrow?.toString() === '0' || isEmpty(i?.currentBorrowWithCanonical) || isEmpty(i?.totalCollateralTokenAmount))
+                          return 0
+                        return toFixed(i?.currentBorrowWithCanonical?.mul(10000).div(i?.totalCollateralTokenAmount)) / 10000
                       }),
                       type: 'line',
                       smooth: true
@@ -365,7 +365,7 @@ const Analysis = () => {
             >
               <ReactECharts
                 option={{
-                  grid: { top: 8, right: 8, bottom: 24, left: 60 },
+                  grid: { top: 8, right: 8, bottom: 24, left: 100 },
                   xAxis: {
                     type: 'category',
                     data: map(dataArray, 'date'),
@@ -376,7 +376,9 @@ const Analysis = () => {
                   },
                   series: [
                     {
-                      data: map(dataArray, i => toFixed(i.estimatedTotalAssets, borrowInfo?.borrowTokenDecimals)),
+                      data: map(dataArray, i => {
+                        return toFixed(i?.estimatedTotalAssets?.sub(i?.netMarketMakingAmount), wantInfo?.wantTokenDecimals)
+                      }),
                       type: 'line',
                       smooth: true
                     }

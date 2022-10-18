@@ -10,19 +10,15 @@ import { useSelector } from 'react-redux'
 
 // === Constants === //
 import { IUNISWAPV3_RISK_ON_VAULT, IUNISWAPV3_RISK_ON_HELPER, VAULT_FACTORY_ADDRESS, VAULT_FACTORY_ABI, IERC20_ABI } from '@/constants'
-
-const array = [
-  { date: '2022-10-14', blockTag: 30160291 },
-  { date: '2022-10-15', blockTag: 30190291 },
-  { date: '2022-10-16', blockTag: 30220291 },
-  { date: '2022-10-17', blockTag: 30250310 }
-]
+import moment from 'moment'
 
 const useDashboard = personalVaultId => {
   const [data, setData] = useState([])
+  const [array, setDataArray] = useState([])
   const [loading, setLoading] = useState(false)
   const userProvider = useSelector(state => state.walletReducer.userProvider)
 
+  console.log('dataArray=', array)
   const load = useCallback(() => {
     if (isEmpty(personalVaultId)) return
     setLoading(true)
@@ -54,7 +50,9 @@ const useDashboard = personalVaultId => {
               helperContract
                 .getCurrentBorrow(borrowToken, 2, personalVaultId, { blockTag })
                 .catch(() => BigNumber.from(0))
-                .then(currentBorrow => helperContract.calcCanonicalAssetValue(borrowToken, currentBorrow, wantToken))
+                .then(currentBorrow => {
+                  return helperContract.calcCanonicalAssetValue(borrowToken, currentBorrow, wantToken)
+                })
             ])
           })
         )
@@ -63,12 +61,12 @@ const useDashboard = personalVaultId => {
               const { date } = item
               return {
                 date,
-                netMarketMakingAmount: resp[index][1],
-                currentBorrow: resp[index][2],
-                totalCollateralTokenAmount: resp[index][3],
-                depositTo3rdPoolTotalAssets: resp[index][4],
-                estimatedTotalAssets: resp[index][5],
-                currentBorrowWithCanonical: resp[index][6]
+                netMarketMakingAmount: resp[index][0],
+                currentBorrow: resp[index][1],
+                totalCollateralTokenAmount: resp[index][2],
+                depositTo3rdPoolTotalAssets: resp[index][3],
+                estimatedTotalAssets: resp[index][4],
+                currentBorrowWithCanonical: resp[index][5]
               }
             })
 
@@ -81,9 +79,24 @@ const useDashboard = personalVaultId => {
           })
       })
     })
-  }, [personalVaultId, userProvider])
+  }, [personalVaultId, userProvider, array])
 
   useEffect(load, [load])
+
+  useEffect(() => {
+    userProvider.getBlockNumber().then(blockNum => {
+      const days = 5
+      const nextDataArray = []
+      for (let i = 0; i < days; i++) {
+        const startDate = moment().subtract(i, 'days')
+        nextDataArray.push({
+          date: startDate.format('YYYY-MM-DD'),
+          blockTag: blockNum - i * 28800
+        })
+      }
+      setDataArray(nextDataArray.reverse())
+    })
+  }, [userProvider])
 
   return {
     data,
