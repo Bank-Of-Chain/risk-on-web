@@ -1,36 +1,27 @@
 const path = require('path')
 
-const { env } = require('./configs/address.json')
-
 // === Utils === //
-const moment = require('moment')
+const { addLessLoader, fixBabelImports, override, addWebpackAlias, adjustStyleLoaders } = require('customize-cra')
 
 // === Plugins === //
-const FileManagerPlugin = require('filemanager-webpack-plugin')
 
-const resolve = dir => path.join(__dirname, '.', dir)
-
-const { NODE_ENV } = process.env
-module.exports = function override(config) {
-  config.resolve.alias = {
-    ...config.resolve.alias,
-    '@': resolve('src')
-  }
-  if (NODE_ENV === 'production') {
-    config.plugins.push(
-      new FileManagerPlugin({
-        events: {
-          onEnd: {
-            archive: [
-              {
-                source: './build',
-                destination: './zip/risk-on-web-' + moment().format('yyyyMMDDHHmmss') + '(' + env + ').zip'
-              }
-            ]
-          }
-        }
-      })
-    )
-  }
-  return config
-}
+module.exports = override(
+  addWebpackAlias({
+    '@': path.resolve(__dirname, './src')
+  }),
+  fixBabelImports('import', {
+    libraryName: 'antd',
+    libraryDirectory: 'es',
+    style: true // change importing css to less
+  }),
+  addLessLoader({
+    lessOptions: {
+      javascriptEnabled: true,
+      modifyVars: { '@primary-color': '#A68EFD' }
+    }
+  }),
+  adjustStyleLoaders(({ use: [, , postcss] }) => {
+    const postcssOptions = postcss.options
+    postcss.options = { postcssOptions }
+  })
+)

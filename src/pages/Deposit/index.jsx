@@ -1,68 +1,45 @@
 import React, { useState } from 'react'
 
+// === Hooks === //
+import { useNavigate } from 'react-router-dom'
+
 // === Components === //
-import { Link, useParams } from 'react-router-dom'
-import { Button, Card, Row, Col, Input } from 'antd'
+import { Row, Col, Tabs, Card, Button } from 'antd'
+import DepositCard from './Deposit/index'
+import WithdrawCard from './Withdraw/index'
 
 const Deposit = () => {
-  const [isDeposit, setIsDeposit] = useState(true)
-  const params = useParams()
-  console.log('params=', params)
+  const navigate = useNavigate()
+  const [activeKey, setActiveKey] = useState('1')
+
   return (
     <Row>
-      <Col span={24}>
-        <Button onClick={() => setIsDeposit(!isDeposit)}>isDeposit={`${isDeposit}`}</Button>
-      </Col>
-      <Col span={12} push={6}>
-        <Card title="Deposit">
-          <Row gutter={[24, 24]}>
-            <Col span={24}>
-              <Input />
-            </Col>
-            <Col span={24}>
-              <Input />
-            </Col>
-            <Col span={24}>
-              <Input />
-            </Col>
-            <Col span={24}>
-              <Input />
-            </Col>
-            <Col span={24}>
-              <Button block type="primary">
-                Deposit
-              </Button>
-            </Col>
-            <Col span={24}>
-              <Button block type="primary" danger>
-                <Link to="/">Cancel</Link>
-              </Button>
+      <Col span={20} push={2}>
+        <Card
+          title={
+            <Button type="link" onClick={() => navigate(-1)}>
+              &lt; Back
+            </Button>
+          }
+        >
+          <Row>
+            <Col span={16} push={4}>
+              <Tabs
+                centered
+                size="large"
+                activeKey={activeKey}
+                items={[
+                  { label: 'Deposit', key: '1' },
+                  { label: 'Withdraw', key: '2' }
+                ]}
+                onTabClick={setActiveKey}
+              />
             </Col>
           </Row>
-        </Card>
-        <Card title="Withdraw">
-          <Row gutter={[24, 24]}>
-            <Col span={24}>
-              <Input />
-            </Col>
-            <Col span={24}>
-              <Input />
-            </Col>
-            <Col span={24}>
-              <Input />
-            </Col>
-            <Col span={24}>
-              <Input />
-            </Col>
-            <Col span={24}>
-              <Button block type="primary">
-                Withdraw
-              </Button>
-            </Col>
-            <Col span={24}>
-              <Button block type="primary" danger>
-                <Link to="/">Cancel</Link>
-              </Button>
+          <Row>
+            <Col span={16} push={4}>
+              {activeKey === '1' && <DepositCard />}
+              {activeKey === '2' && <WithdrawCard />}
             </Col>
           </Row>
         </Card>

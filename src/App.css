@@ -1,5 +1,5 @@
 /* @import '~antd/dist/antd.css'; */
-@import '~antd/dist/antd.dark.css';
+/* @import '~antd/dist/antd.dark.css'; */
 
 * {
   margin: 0;
@@ -12,7 +12,48 @@ body,
   height: 100%;
 }
 
+.ant-layout {
+  min-height: 100%;
+}
+
+.ant-layout,
+div.ant-card {
+  background-color: var(--background-color);
+  color: var(--color);
+}
+
+.ant-layout-footer {
+  background-color: var(--background-color-footer);
+  color: var(--color);
+}
+
+div.ant-tabs,
+div.ant-list,
+h4.ant-list-item-meta-title,
+div.ant-card-head,
+span.ant-descriptions-item-label,
+span.ant-descriptions-item-content {
+  color: var(--color);
+}
+
+.ant-input-affix-wrapper,
+.ant-input {
+  background-color: var(--background-color-input);
+  color: var(--color);
+}
+
+.ant-card,
+.ant-tabs-top > .ant-tabs-nav::before,
+.ant-input-affix-wrapper {
+  border-color: var(--border-color);
+}
+
+div.ant-list-item-meta-description {
+  color: var(--color-description);
+}
+
 .ant-layout-content {
+  min-height: 500px;
   padding: 24px;
 }
 

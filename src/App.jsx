@@ -3,6 +3,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom'
 
 // === Components === //
 import { Layout } from 'antd'
+import Loading from '@/components/Loading'
 import HeaderComponent from '@/components/Header'
 import FooterComponent from '@/components/Footer'
 
@@ -13,6 +14,7 @@ import useWallet from '@/hooks/useWallet'
 import { isInMobileWalletApp, isInMobileH5 } from '@/helpers/plugin-util'
 
 // === Styles === //
+import 'antd/dist/antd.less'
 import './theme/dark.css'
 import './theme/light.css'
 import './App.css'
@@ -20,7 +22,8 @@ import './App.css'
 const { Header, Footer, Content } = Layout
 
 // === Pages === //
-const Home = lazy(() => import('./pages/Home/index'))
+const List = lazy(() => import('./pages/List/index'))
+const Create = lazy(() => import('./pages/Create/index'))
 const Add = lazy(() => import('./pages/Add/index'))
 const Deposit = lazy(() => import('./pages/Deposit/index'))
 const Analysis = lazy(() => import('./pages/Analysis/index'))
@@ -47,15 +50,23 @@ function App() {
             <Route
               index
               element={
-                <Suspense>
-                  <Home />
+                <Suspense fallback={<Loading />}>
+                  <List />
+                </Suspense>
+              }
+            />
+            <Route
+              path="create/:templateVaultId"
+              element={
+                <Suspense fallback={<Loading />}>
+                  <Create />
                 </Suspense>
               }
             />
             <Route
               path="add"
               element={
-                <Suspense>
+                <Suspense fallback={<Loading />}>
                   <Add />
                 </Suspense>
               }
@@ -63,7 +74,7 @@ function App() {
             <Route
               path="deposit/:personalVaultId"
               element={
-                <Suspense>
+                <Suspense fallback={<Loading />}>
                   <Deposit />
                 </Suspense>
               }
@@ -71,7 +82,7 @@ function App() {
             <Route
               path="analysis/:personalVaultId"
               element={
-                <Suspense>
+                <Suspense fallback={<Loading />}>
                   <Analysis />
                 </Suspense>
               }

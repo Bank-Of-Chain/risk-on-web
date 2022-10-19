@@ -1,3 +1,8 @@
 body.dark-theme {
-  --background-color: #1F2023;
+  --background-color: #000;
+  --color: rgba(255, 255, 255, 0.85);
+  --border-color: #303030;
+  --background-color-footer: #000;
+  --background-color-input: transparent;
+  --color-description: rgba(255, 255, 255, 0.45);
 }

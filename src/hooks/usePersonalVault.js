@@ -1,3 +1,5 @@
+import { useCallback, useEffect, useState } from 'react'
+
 // === Utils === //
 import map from 'lodash/map'
 import isEmpty from 'lodash/isEmpty'
@@ -6,32 +8,30 @@ import isEmpty from 'lodash/isEmpty'
 import { useSelector } from 'react-redux'
 
 // === Constants === //
-import { IERC20_ABI } from '@/constants'
-import { useCallback, useEffect, useState } from 'react'
+import { IUNISWAPV3_RISK_ON_VAULT } from '@/constants'
 import { Contract } from 'ethers'
 
-const useNameHooks = (array = []) => {
+const usePersonalVault = (array = []) => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const userProvider = useSelector(state => state.walletReducer.userProvider)
-  const provider = useSelector(state => state.walletReducer.provider)
-
-  const userAddress = provider?.selectedAddress
 
   const load = useCallback(() => {
-    if (isEmpty(array) || isEmpty(userAddress)) return
+    if (isEmpty(array)) return
     setLoading(true)
     Promise.all(
       map(array, async address => {
-        if (isEmpty(address))
-          return {
-            name: address,
-            address
-          }
-        const contract = new Contract(address, IERC20_ABI, userProvider)
+        if (isEmpty(address)) return {}
+        const contract = new Contract(address, IUNISWAPV3_RISK_ON_VAULT, userProvider)
+        let name = address
+        try {
+          name = await contract.name()
+        } catch (error) {}
         return {
-          name: (await contract.name()) || address,
-          address
+          name,
+          address,
+          token: (await contract.getStatus())._wantToken,
+          type: ''
         }
       })
     )
@@ -43,8 +43,7 @@ const useNameHooks = (array = []) => {
           setLoading(false)
         }, 300)
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [array.toString(), userProvider, userAddress])
+  }, [array.toString(), userProvider])
 
   useEffect(() => {
     load()
@@ -56,4 +55,4 @@ const useNameHooks = (array = []) => {
   }
 }
 
-export default useNameHooks
+export default usePersonalVault

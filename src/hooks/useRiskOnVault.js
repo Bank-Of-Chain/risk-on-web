@@ -1,69 +1,190 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 // === Components === //
-import { Select } from 'antd'
+import { Select, Spin, message } from 'antd'
 
 // === Hooks === //
+import { useSelector } from 'react-redux'
 import useNameHooks from '@/hooks/useNameHooks'
 
+// === Utils === //
+import * as ethers from 'ethers'
+
 // === Constants === //
-import { LUSD_ADDRESS, USDC_ADDRESS, SUSD_ADDRESS, WETH_ADDRESS, GUSD_ADDRESS } from '@/constants/tokens'
-import { map } from 'lodash'
+import { USDC_ADDRESS, WETH_ADDRESS, ZERO_ADDRESS } from '@/constants/tokens'
+import { VAULT_FACTORY_ABI } from '@/constants'
+import map from 'lodash/map'
+import isEmpty from 'lodash/isEmpty'
+import flatten from 'lodash/flatten'
 
 const { Option } = Select
+const { Contract } = ethers
 
-const tokens = [LUSD_ADDRESS, USDC_ADDRESS, SUSD_ADDRESS]
-const types = [WETH_ADDRESS, GUSD_ADDRESS]
+const tokens = [WETH_ADDRESS, USDC_ADDRESS]
 
-const useRiskOnVault = vaultAddress => {
-  const tokenArray = useNameHooks(tokens)
-  const typeArray = useNameHooks(types)
-  const [type, setType] = useState(types[0])
-  const [token, setToken] = useState(tokens[0])
+const useRiskOnVault = (vaultFactoryAddress, vaultImplAddress) => {
+  const provider = useSelector(state => state.walletReducer.provider)
+  const userProvider = useSelector(state => state.walletReducer.userProvider)
+  const navigate = useNavigate()
+  const [vaultImplList, setVaultImplList] = useState([])
+  const [personalVault, setPersonalVault] = useState([])
+  const [isSupport, setIsSupport] = useState()
+  const { data: tokenArray, loading: tokenLoading } = useNameHooks(tokens)
+  const { data: typeArray, loading: typeLoading } = useNameHooks(vaultImplList)
+  const [type, setType] = useState()
+  const [token, setToken] = useState()
+  const [adding, setAdding] = useState(false)
 
-  console.log('type=', type, token)
+  const userAddress = provider?.selectedAddress
+
   const reset = () => {
-    setToken(tokens[0])
-    setType(types[0])
+    setToken()
+    setType()
   }
 
   const typeSelector = (
-    <Select value={type} onChange={setType} size="small">
-      {map(typeArray, item => {
-        const { name, address } = item
-        return (
-          <Option key={address} value={address}>
-            {name}
-          </Option>
-        )
-      })}
-    </Select>
+    <Spin size="small" spinning={typeLoading}>
+      <Select value={type} onChange={setType} style={{ minWidth: 200 }} placeholder="Select a template">
+        {map(typeArray, item => {
+          const { name, address } = item
+          return (
+            <Option key={address} value={address}>
+              {name}
+            </Option>
+          )
+        })}
+      </Select>
+    </Spin>
   )
 
   const tokenSelector = (
-    <Select value={token} onChange={setToken} size="small">
-      {map(tokenArray, item => {
-        const { name, address } = item
-        return (
-          <Option key={address} value={address}>
-            {name}
-          </Option>
-        )
-      })}
-    </Select>
+    <Spin size="small" spinning={tokenLoading}>
+      <Select value={token} onChange={setToken} style={{ minWidth: 200 }} placeholder="Select a want token">
+        {map(tokenArray, item => {
+          const { name, address } = item
+          return (
+            <Option key={address} value={address}>
+              {name}
+            </Option>
+          )
+        })}
+      </Select>
+    </Spin>
   )
 
-  const isSupport = true
+  const addVault = useCallback(
+    async (token, type) => {
+      setAdding(true)
+      try {
+        const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+        console.log('token, type=', token, type)
+        const tx = await vaultFactoryContract.connect(userProvider.getSigner()).createNewVault(token, type)
+        const { events } = await tx.wait()
+        let args = []
+        for (let i = events.length - 1; i >= 0; i--) {
+          if (events[i].event === 'CreateNewVault') {
+            args = events[i].args
+            break
+          }
+        }
+        const { _newVault } = args
+        message.success('Add vault success')
+        navigate(`/deposit/${_newVault}`)
+      } catch (error) {
+        message.error('Add vault failed')
+      }
+      setAdding(false)
+    },
+    [vaultFactoryAddress, userProvider, navigate]
+  )
+
+  const getVaultImplList = useCallback(() => {
+    if (isEmpty(vaultFactoryAddress) || isEmpty(userProvider)) return
+    const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+    vaultFactoryContract.getVaultImplList().then(setVaultImplList)
+  }, [vaultFactoryAddress, userProvider])
+
+  const getVaultImplListByUser = useCallback(() => {
+    if (isEmpty(vaultFactoryAddress) || isEmpty(userProvider) || isEmpty(vaultImplList) || isEmpty(userAddress)) return
+    const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+    const requestArray = map(vaultImplList, implAddress => {
+      if (!isEmpty(vaultImplAddress) && implAddress !== vaultImplAddress) return []
+      return Promise.all(
+        map(tokens, (arrayItem, index) => {
+          return vaultFactoryContract.vaultAddressMap(userAddress, implAddress, index).then(rs => {
+            if (rs === ZERO_ADDRESS) return { hasCreate: false, type: implAddress, token: arrayItem }
+            return {
+              address: rs,
+              type: implAddress,
+              hasCreate: true,
+              token: arrayItem
+            }
+          })
+        })
+      )
+    })
+    Promise.all(requestArray).then(resp => {
+      setPersonalVault(flatten(resp))
+    })
+  }, [userAddress, vaultFactoryAddress, userProvider, vaultImplList, vaultImplAddress])
+
+  const deleteVault = useCallback(
+    async (type, index) => {
+      setAdding(true)
+      const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+      vaultFactoryContract
+        .connect(userProvider.getSigner())
+        .deleteVaultAddressMapForDebug(userAddress, type, index)
+        .then(tx => tx.wait())
+        .then(() => {
+          message.success('Delete vault success')
+        })
+        .then(getVaultImplListByUser)
+        .catch(() => {
+          message.error('Delete vault failed')
+        })
+        .finally(() => {
+          setAdding(false)
+        })
+    },
+    [vaultFactoryAddress, getVaultImplListByUser, userAddress, userProvider]
+  )
+
+  const estimateAdd = useCallback(() => {
+    if (isEmpty(token) || isEmpty(type) || isEmpty(userAddress)) {
+      setIsSupport()
+      return
+    }
+    const vaultFactoryContract = new Contract(vaultFactoryAddress, VAULT_FACTORY_ABI, userProvider)
+    vaultFactoryContract
+      .connect(userProvider.getSigner())
+      .callStatic.createNewVault(token, type)
+      .then(() => setIsSupport(true))
+      .catch(() => setIsSupport(false))
+  }, [token, type, userAddress, vaultFactoryAddress, userProvider])
+
+  useEffect(getVaultImplList, [getVaultImplList])
+
+  useEffect(getVaultImplListByUser, [getVaultImplListByUser])
+
+  useEffect(estimateAdd, [estimateAdd])
+
   return {
-    vaultAddress,
+    vaultFactoryAddress,
     isSupport,
     type,
     token,
+    vaultImplList,
+    personalVault,
     // elements
     typeSelector,
     tokenSelector,
     // functions
-    reset
+    reset,
+    addVault,
+    deleteVault,
+    adding
   }
 }
 
