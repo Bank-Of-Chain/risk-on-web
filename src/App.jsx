@@ -1,11 +1,6 @@
 import React, { useEffect, lazy, Suspense } from 'react'
 import { HashRouter, Routes, Route } from 'react-router-dom'
 
-// === Components === //
-import { Layout } from 'antd'
-import HeaderComponent from '@/components/Header'
-import FooterComponent from '@/components/Footer'
-
 // === Hooks === //
 import useWallet from '@/hooks/useWallet'
 
@@ -17,13 +12,8 @@ import './theme/dark.css'
 import './theme/light.css'
 import './App.css'
 
-const { Header, Footer, Content } = Layout
-
 // === Pages === //
-const Home = lazy(() => import('./pages/Home/index'))
-const Add = lazy(() => import('./pages/Add/index'))
-const Deposit = lazy(() => import('./pages/Deposit/index'))
-const Analysis = lazy(() => import('./pages/Analysis/index'))
+const Components = lazy(() => import('./pages/components'))
 
 function App() {
   const { web3Modal, connect, getWalletName } = useWallet()
@@ -38,50 +28,24 @@ function App() {
 
   return (
     <HashRouter>
-      <Layout>
-        <Header>
-          <HeaderComponent />
-        </Header>
-        <Content>
-          <Routes>
-            <Route
-              index
-              element={
-                <Suspense>
-                  <Home />
-                </Suspense>
-              }
-            />
-            <Route
-              path="add"
-              element={
-                <Suspense>
-                  <Add />
-                </Suspense>
-              }
-            />
-            <Route
-              path="deposit/:personalVaultId"
-              element={
-                <Suspense>
-                  <Deposit />
-                </Suspense>
-              }
-            />
-            <Route
-              path="analysis/:personalVaultId"
-              element={
-                <Suspense>
-                  <Analysis />
-                </Suspense>
-              }
-            />
-          </Routes>
-        </Content>
-        <Footer>
-          <FooterComponent />
-        </Footer>
-      </Layout>
+      <Routes>
+        <Route
+          index
+          element={
+            <Suspense>
+              <Components />
+            </Suspense>
+          }
+        />
+        <Route
+          path="component"
+          element={
+            <Suspense>
+              <Components />
+            </Suspense>
+          }
+        />
+      </Routes>
     </HashRouter>
   )
 }
