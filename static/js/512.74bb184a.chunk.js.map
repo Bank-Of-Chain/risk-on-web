@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/512.74bb184a.chunk.js","mappings":"4IAMA,UAJmB,WACjB,OAAO,qCACT,C","sources":["pages/components/index.jsx"],"sourcesContent":["import React from 'react'\n\nconst Components = () => {\n  return <p>components</p>\n}\n\nexport default Components\n"],"names":[],"sourceRoot":""}
