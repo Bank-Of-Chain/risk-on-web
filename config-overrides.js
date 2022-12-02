@@ -1,36 +1,24 @@
 const path = require('path')
 
-const { env } = require('./configs/address.json')
-
-// === Utils === //
-const moment = require('moment')
-
 // === Plugins === //
-const FileManagerPlugin = require('filemanager-webpack-plugin')
+const { override, addLessLoader, adjustStyleLoaders, addWebpackAlias } = require('customize-cra')
 
 const resolve = dir => path.join(__dirname, '.', dir)
 
-const { NODE_ENV } = process.env
-module.exports = function override(config) {
-  config.resolve.alias = {
-    ...config.resolve.alias,
+module.exports = override(
+  addWebpackAlias({
     '@': resolve('src')
-  }
-  if (NODE_ENV === 'production') {
-    config.plugins.push(
-      new FileManagerPlugin({
-        events: {
-          onEnd: {
-            archive: [
-              {
-                source: './build',
-                destination: './zip/risk-on-web-' + moment().format('yyyyMMDDHHmmss') + '(' + env + ').zip'
-              }
-            ]
-          }
-        }
-      })
-    )
-  }
-  return config
-}
+  }),
+  addLessLoader({
+    lessOptions: {
+      test: /\.less$/,
+      javascriptEnabled: true,
+      modifyVars: { '@primary-color': '#13c2c2' }
+    }
+  }),
+  // ↓加了这么个配置
+  adjustStyleLoaders(({ use: [, , postcss] }) => {
+    const postcssOptions = postcss.options
+    postcss.options = { postcssOptions }
+  })
+)
