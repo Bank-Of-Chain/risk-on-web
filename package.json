@@ -46,7 +46,8 @@
     "filemanager-webpack-plugin": "^7.0.0",
     "husky": "^8.0.1",
     "prettier": "^2.7.1",
-    "react-app-rewired": "^2.2.1"
+    "react-app-rewired": "^2.2.1",
+    "mini-css-extract-plugin": "^2.6.1"
   },
   "scripts": {
     "start": "react-app-rewired start",
