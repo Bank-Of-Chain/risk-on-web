@@ -10,7 +10,7 @@ console.log('styles=', styles, typeof styles)
 const { Meta } = Card
 const { Text } = Typography
 
-const Components = () => {
+const Home = () => {
   return (
     <Row>
       <Col span={24}>
@@ -60,4 +60,4 @@ const Components = () => {
   )
 }
 
-export default Components
+export default Home
