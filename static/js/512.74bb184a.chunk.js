@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkrisk_on_web=self.webpackChunkrisk_on_web||[]).push([[512],{7512:function(n,e,s){s.r(e);s(8381);var r=s(9343);e.default=function(){return(0,r.jsx)("p",{children:"components"})}}}]);
-//# sourceMappingURL=512.74bb184a.chunk.js.map

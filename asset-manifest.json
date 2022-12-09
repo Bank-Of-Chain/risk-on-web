@@ -1,17 +1,25 @@
 {
   "files": {
-    "main.css": "/risk-on-web/static/css/main.74fed8c4.css",
-    "main.js": "/risk-on-web/static/js/main.92868b25.js",
-    "static/js/512.74bb184a.chunk.js": "/risk-on-web/static/js/512.74bb184a.chunk.js",
+    "main.css": "/risk-on-web/static/css/main.2fd8c455.css",
+    "main.js": "/risk-on-web/static/js/main.61192366.js",
+    "static/css/139.dd845fd8.chunk.css": "/risk-on-web/static/css/139.dd845fd8.chunk.css",
+    "static/js/139.55b8535e.chunk.js": "/risk-on-web/static/js/139.55b8535e.chunk.js",
+    "static/js/31.ad92ddfe.chunk.js": "/risk-on-web/static/js/31.ad92ddfe.chunk.js",
+    "static/js/391.1b2a36c3.chunk.js": "/risk-on-web/static/js/391.1b2a36c3.chunk.js",
+    "static/js/450.ad94f950.chunk.js": "/risk-on-web/static/js/450.ad94f950.chunk.js",
     "static/js/111.a0d3f7bb.chunk.js": "/risk-on-web/static/js/111.a0d3f7bb.chunk.js",
     "index.html": "/risk-on-web/index.html",
-    "main.74fed8c4.css.map": "/risk-on-web/static/css/main.74fed8c4.css.map",
-    "main.92868b25.js.map": "/risk-on-web/static/js/main.92868b25.js.map",
-    "512.74bb184a.chunk.js.map": "/risk-on-web/static/js/512.74bb184a.chunk.js.map",
+    "main.2fd8c455.css.map": "/risk-on-web/static/css/main.2fd8c455.css.map",
+    "main.61192366.js.map": "/risk-on-web/static/js/main.61192366.js.map",
+    "139.dd845fd8.chunk.css.map": "/risk-on-web/static/css/139.dd845fd8.chunk.css.map",
+    "139.55b8535e.chunk.js.map": "/risk-on-web/static/js/139.55b8535e.chunk.js.map",
+    "31.ad92ddfe.chunk.js.map": "/risk-on-web/static/js/31.ad92ddfe.chunk.js.map",
+    "391.1b2a36c3.chunk.js.map": "/risk-on-web/static/js/391.1b2a36c3.chunk.js.map",
+    "450.ad94f950.chunk.js.map": "/risk-on-web/static/js/450.ad94f950.chunk.js.map",
     "111.a0d3f7bb.chunk.js.map": "/risk-on-web/static/js/111.a0d3f7bb.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.74fed8c4.css",
-    "static/js/main.92868b25.js"
+    "static/css/main.2fd8c455.css",
+    "static/js/main.61192366.js"
   ]
 }

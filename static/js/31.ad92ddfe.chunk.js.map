@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/31.ad92ddfe.chunk.js","mappings":"2IAMA,UAJY,WACV,OAAO,iCACT,C","sources":["pages/Eth/index.jsx"],"sourcesContent":["import React from 'react'\n\nconst Eth = () => {\n  return <span>Eth</span>\n}\n\nexport default Eth\n"],"names":[],"sourceRoot":""}
