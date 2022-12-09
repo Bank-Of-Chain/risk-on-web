@@ -45,6 +45,8 @@
     "eslint-plugin-prettier": "^4.2.1",
     "filemanager-webpack-plugin": "^7.0.0",
     "husky": "^8.0.1",
+    "mini-css-extract-plugin": "^2.6.1",
+    "postcss-loader": "^7.0.2",
     "prettier": "^2.7.1",
     "react-app-rewired": "^2.2.1"
   },
